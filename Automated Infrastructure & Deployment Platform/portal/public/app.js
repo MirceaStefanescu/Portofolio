@@ -38,9 +38,15 @@ async function requestTemplate(endpoint) {
     body: JSON.stringify(buildPayload())
   });
 
-  const data = await response.json();
+  let data = {};
+  try {
+    data = await response.json();
+  } catch (error) {
+    data = {};
+  }
   if (!response.ok) {
-    throw new Error(data.error || "Request failed");
+    const requestId = data.requestId ? ` (requestId: ${data.requestId})` : "";
+    throw new Error(`${data.error || "Request failed"}${requestId}`);
   }
 
   return data;

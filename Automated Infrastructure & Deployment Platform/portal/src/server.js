@@ -1,19 +1,13 @@
 const express = require("express");
-const fs = require("fs");
 const path = require("path");
+const { config } = require("./config");
+const { log, logError, requestLogger } = require("./logger");
+const { loadTemplates, renderTemplate } = require("./templates");
+const { normalizeInput } = require("./validation");
 
 const app = express();
-const port = process.env.PORT || 8080;
-
-const templateDir = path.join(__dirname, "..", "templates");
 const publicDir = path.join(__dirname, "..", "public");
-
-const templates = {
-  jenkins: loadTemplate("Jenkinsfile.tpl"),
-  github: loadTemplate("github-actions.yml.tpl"),
-  terraform: loadTemplate("terraform-main.tf.tpl"),
-  helm: loadTemplate("helm-values.yaml.tpl")
-};
+const templates = loadTemplates();
 
 const metrics = {
   pipeline: 0,
@@ -23,38 +17,41 @@ const metrics = {
 };
 
 app.use(express.json({ limit: "1mb" }));
+app.use(requestLogger);
 app.use(express.static(publicDir));
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "ok" });
 });
 
-app.get("/api/services", async (req, res) => {
+app.get(
+  "/api/services",
+  wrapAsync(async (req, res) => {
   metrics.services += 1;
 
   const serviceChecks = [
     {
       id: "jenkins",
       name: "Jenkins",
-      url: process.env.JENKINS_URL,
+      url: config.jenkinsUrl,
       path: "/login"
     },
     {
       id: "vault",
       name: "Vault",
-      url: process.env.VAULT_ADDR,
+      url: config.vaultAddr,
       path: "/v1/sys/health"
     },
     {
       id: "prometheus",
       name: "Prometheus",
-      url: process.env.PROMETHEUS_URL,
+      url: config.prometheusUrl,
       path: "/-/ready"
     },
     {
       id: "grafana",
       name: "Grafana",
-      url: process.env.GRAFANA_URL,
+      url: config.grafanaUrl,
       path: "/api/health"
     }
   ];
@@ -80,6 +77,11 @@ app.get("/api/services", async (req, res) => {
           httpStatus: response.status
         };
       } catch (error) {
+        log("warn", "service.unreachable", {
+          requestId: req.requestId,
+          service: service.id,
+          url
+        });
         return {
           id: service.id,
           name: service.name,
@@ -89,13 +91,18 @@ app.get("/api/services", async (req, res) => {
     })
   );
 
-  res.json({ services: results });
-});
+  res.json({ services: results, requestId: req.requestId });
+  })
+);
 
 app.post("/api/pipeline", (req, res) => {
   const input = normalizeInput(req.body);
   if (!input.valid) {
-    res.status(400).json({ error: input.error });
+    log("warn", "pipeline.invalid", {
+      requestId: req.requestId,
+      error: input.error
+    });
+    res.status(400).json({ error: input.error, requestId: req.requestId });
     return;
   }
 
@@ -106,21 +113,34 @@ app.post("/api/pipeline", (req, res) => {
   const content = renderTemplate(template, {
     appName: input.appName,
     environment: input.environment,
-    vaultAddr: process.env.VAULT_ADDR || "http://vault:8200",
+    vaultAddr: config.vaultAddr,
     imageRepo: input.appName,
     imageTag: "latest"
   });
 
+  log("info", "pipeline.generated", {
+    requestId: req.requestId,
+    actionId: req.requestId,
+    provider,
+    appName: input.appName,
+    environment: input.environment
+  });
+
   res.json({
     filename: provider === "jenkins" ? "Jenkinsfile" : "ci.yml",
-    content
+    content,
+    requestId: req.requestId
   });
 });
 
 app.post("/api/terraform", (req, res) => {
   const input = normalizeInput(req.body);
   if (!input.valid) {
-    res.status(400).json({ error: input.error });
+    log("warn", "terraform.invalid", {
+      requestId: req.requestId,
+      error: input.error
+    });
+    res.status(400).json({ error: input.error, requestId: req.requestId });
     return;
   }
 
@@ -131,16 +151,28 @@ app.post("/api/terraform", (req, res) => {
     appCount: input.appCount
   });
 
+  log("info", "terraform.generated", {
+    requestId: req.requestId,
+    actionId: req.requestId,
+    environment: input.environment,
+    appCount: input.appCount
+  });
+
   res.json({
     filename: `main-${input.environment}.tf`,
-    content
+    content,
+    requestId: req.requestId
   });
 });
 
 app.post("/api/helm", (req, res) => {
   const input = normalizeInput(req.body);
   if (!input.valid) {
-    res.status(400).json({ error: input.error });
+    log("warn", "helm.invalid", {
+      requestId: req.requestId,
+      error: input.error
+    });
+    res.status(400).json({ error: input.error, requestId: req.requestId });
     return;
   }
 
@@ -151,12 +183,20 @@ app.post("/api/helm", (req, res) => {
     environment: input.environment,
     imageRepo: input.appName,
     imageTag: "latest",
-    vaultAddr: process.env.VAULT_ADDR || "http://vault:8200"
+    vaultAddr: config.vaultAddr
+  });
+
+  log("info", "helm.generated", {
+    requestId: req.requestId,
+    actionId: req.requestId,
+    appName: input.appName,
+    environment: input.environment
   });
 
   res.json({
     filename: `values-${input.environment}.yaml`,
-    content
+    content,
+    requestId: req.requestId
   });
 });
 
@@ -174,55 +214,21 @@ app.get("/api/metrics", (req, res) => {
   );
 });
 
-app.listen(port, () => {
-  console.log(`Portal listening on port ${port}`);
+app.use((req, res) => {
+  res.status(404).json({ error: "Not found", requestId: req.requestId });
 });
 
-function loadTemplate(filename) {
-  const filepath = path.join(templateDir, filename);
-  return fs.readFileSync(filepath, "utf8");
-}
+app.use((err, req, res, next) => {
+  logError(err, { requestId: req.requestId, path: req.originalUrl });
+  res.status(500).json({ error: "Internal server error", requestId: req.requestId });
+});
 
-function renderTemplate(template, values) {
-  return template.replace(/{{\s*([a-zA-Z0-9_]+)\s*}}/g, (match, key) => {
-    return Object.prototype.hasOwnProperty.call(values, key) ? values[key] : "";
-  });
-}
+app.listen(config.port, () => {
+  log("info", "server.ready", { port: config.port });
+});
 
-function normalizeInput(body) {
-  const rawAppName = String(body.appName || "").trim().toLowerCase();
-  const rawEnvironment = String(body.environment || "").trim().toLowerCase();
-  const provider = String(body.provider || "github").trim().toLowerCase();
-  const appCount = Number.isFinite(Number(body.appCount))
-    ? Math.max(0, Math.min(50, Number(body.appCount)))
-    : 1;
-
-  if (!isSafeName(rawAppName)) {
-    return { valid: false, error: "App name must be lowercase letters, numbers, or hyphens." };
-  }
-
-  if (!isSafeName(rawEnvironment)) {
-    return {
-      valid: false,
-      error: "Environment must be lowercase letters, numbers, or hyphens."
-    };
-  }
-
-  if (provider !== "jenkins" && provider !== "github") {
-    return { valid: false, error: "Provider must be jenkins or github." };
-  }
-
-  return {
-    valid: true,
-    appName: rawAppName,
-    environment: rawEnvironment,
-    provider,
-    appCount
-  };
-}
-
-function isSafeName(value) {
-  return Boolean(value) && /^[a-z0-9-]+$/.test(value);
+function wrapAsync(handler) {
+  return (req, res, next) => Promise.resolve(handler(req, res, next)).catch(next);
 }
 
 async function fetchWithTimeout(url, timeoutMs) {

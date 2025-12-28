@@ -28,6 +28,10 @@ curl -X POST http://localhost:8080/api/pipeline \
   -d '{"appName":"orders-api","environment":"dev","provider":"github","appCount":3}'
 ```
 
+## Configuration and logging
+- Configure service URLs and log level via `.env` (see `.env.example`).
+- Logs are JSON with `requestId` for traceability (see `docs/logging.md`).
+
 ## Local dev
 The portal runs through Docker Compose at `http://localhost:8080` (Node 18 runtime).
 For direct runs:

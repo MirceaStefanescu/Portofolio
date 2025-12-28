@@ -1,23 +1,28 @@
 # Automated Infrastructure & Deployment Platform
 
-Internal self-service platform that standardizes application delivery and infrastructure provisioning for product teams and platform engineers.
+Automated Infrastructure & Deployment Platform is an internal developer platform for platform engineers and product teams to self-service infrastructure and CI/CD in minutes. Think "Platform Engineering in a box": the portal renders Terraform and Jenkins/GitHub Actions templates on demand (e.g., provision a full CI/CD stack with one click).
+
+[![CI](https://github.com/MirceaStefanescu/Portofolio/actions/workflows/ci.yml/badge.svg)](https://github.com/MirceaStefanescu/Portofolio/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/MirceaStefanescu/Portofolio/actions/workflows/codeql.yml/badge.svg)](https://github.com/MirceaStefanescu/Portofolio/actions/workflows/codeql.yml)
 
 ## Demo
 - Live: TBD
 - Video or GIF: TBD
-- Screenshots: docs/screenshots/
+- Screenshots: `docs/screenshots/portal-ui.svg`
 - Local: http://localhost:8080 (after `make dev`)
 
+![Portal UI](docs/screenshots/portal-ui.svg)
+
 ## Why this exists
-Role: DevOps Engineer. We needed a repeatable way to provision infra and deploy apps without ticket queues or hand-crafted pipelines. The platform enforces standards, reduces drift, and improves auditability while keeping teams self-service. Skills and deliverables: Terraform, Jenkins, GitHub, CI/CD, HashiCorp Vault.
+Teams lose days to manual infrastructure setup, one-off pipeline scripts, and inconsistent deployment patterns. This platform standardizes the workflow so new services can go from request to pipeline and infra templates in minutes, cutting onboarding time, reducing drift, and making audits easier.
 
 ## Features
-- Terraform module catalog for reproducible infra provisioning
-- Helm-based app releases with environment-specific values
-- Portal + API generate Jenkins/GitHub Actions pipelines and Terraform/Helm templates
+- Self-service portal for infra and CI/CD template generation
+- Terraform module catalog for reproducible infrastructure provisioning
+- Jenkins and GitHub Actions pipeline templates per request
+- Helm values generation for environment-specific app releases
 - Vault-backed secret injection with short-lived tokens
-- Prometheus and Grafana dashboards for service and pipeline health
-- Drift detection and rollback using Terraform state and Kubernetes manifests
+- Prometheus and Grafana dashboards for platform health
 
 ## Architecture
 ```mermaid
@@ -41,12 +46,12 @@ flowchart LR
   Drift --> K8s
 ```
 
-Component flow: developers request infra and pipelines through the portal UI, backed by a portal API that renders templates from `portal/templates` and exposes `/api/metrics` for Prometheus. Terraform modules provision cloud resources, Helm charts deploy apps to Kubernetes, Vault brokers secrets, and Prometheus/Grafana provide visibility. Drift detection compares Terraform state and Kubernetes manifests to actual state and supports rollback.
+Component flow: developers request infra and pipelines through the portal UI. The portal API renders templates from `portal/templates` and exposes `/api/metrics` for Prometheus. Terraform modules provision cloud resources, Helm charts deploy apps to Kubernetes, Vault brokers secrets, and Prometheus/Grafana provide visibility. Drift detection compares Terraform state and Kubernetes manifests to actual state and supports rollback. More detail in `docs/architecture.md`.
 
 ## Tech stack
-- Backend: Node/Express portal API that generates pipelines and infra templates on demand.
-- Frontend: static portal UI served by the API with live previews and downloads.
-- Infra: Terraform modules for reusable infrastructure definitions and drift detection.
+- Backend: Node/Express for lightweight request handling and template rendering.
+- Frontend: static portal UI served by the API for fast local demos.
+- Infra: Terraform modules for reusable infrastructure definitions and drift checks.
 - Delivery: Helm charts for Kubernetes deployments with environment overrides.
 - CI: Jenkins and GitHub Actions to cover legacy and GitHub-native pipelines.
 - Security: HashiCorp Vault for secrets brokering and short-lived tokens.
@@ -57,16 +62,25 @@ Component flow: developers request infra and pipelines through the portal UI, ba
 Prereqs:
 - Docker and Docker Compose
 - Make
-- Terraform, Helm, kubectl (for infra and deployment commands)
+- Terraform, Helm, kubectl (only needed for infra/deploy steps)
 
 Run:
 ```
 make dev
 ```
 Then open `http://localhost:8080` to generate pipelines and templates.
-Optional: copy `.env.example` to `.env` to override service URLs.
 
-Service URLs:
+Optional config:
+- `cp .env.example .env` and override service URLs, tokens, and log level.
+- Structured logs are emitted to stdout; example in `docs/logging.md`.
+
+Example usage: provision a Jenkins pipeline for a Node.js app
+1) Open the portal and enter `orders-api`, environment `dev`, provider `jenkins`.
+2) Click "Generate Pipeline" to download the Jenkinsfile template.
+3) Click "Generate Terraform" and "Generate Helm" for infra and deploy values.
+4) Commit templates to the service repo and run CI to provision and deploy.
+
+Service URLs (local):
 - Portal: http://localhost:8080
 - Jenkins: http://localhost:8081
 - Vault: http://localhost:8200
@@ -79,10 +93,11 @@ make test
 ```
 
 ## Security
-Secrets: use .env (see .env.example). Vault handles runtime secret injection. Threat model basics in `docs/threat-model.md`. Secret scanning should be enabled in GitHub.
+Secrets: use `.env` (see `.env.example`). Vault handles runtime secret injection. Threat model basics live in `docs/threat-model.md`. Security policy is in `SECURITY.md`. Enable secret scanning in GitHub; Dependabot config lives in `.github/dependabot.yml`.
 
 ## Notes / limitations
-- Terraform modules are illustrative and do not target a specific cloud provider by default.
+- Status: MVP prototype focused on template generation and local demos.
+- Terraform modules are illustrative and do not target a specific cloud by default.
 - CI pipelines focus on structure and integration points, not full production hardening.
 - Portal generates templates without applying them to a real cluster by default.
 
