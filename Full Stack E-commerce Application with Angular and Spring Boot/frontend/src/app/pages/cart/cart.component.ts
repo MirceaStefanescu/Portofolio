@@ -1,5 +1,5 @@
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { Component, computed } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { CartService } from '../../core/services/cart.service';
 
@@ -11,6 +11,7 @@ import { CartService } from '../../core/services/cart.service';
   styleUrl: './cart.component.css'
 })
 export class CartComponent {
+  private cartService = inject(CartService);
   items = this.cartService.items;
   total = computed(() =>
     this.items().reduce(
@@ -18,8 +19,6 @@ export class CartComponent {
       0
     )
   );
-
-  constructor(private cartService: CartService) {}
 
   updateQuantity(productId: number, quantity: number): void {
     this.cartService.updateQuantity(productId, quantity);

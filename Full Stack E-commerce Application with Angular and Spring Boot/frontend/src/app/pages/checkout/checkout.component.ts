@@ -1,5 +1,5 @@
 import { CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { DEFAULT_CURRENCY, STRIPE_PUBLISHABLE_KEY } from '../../core/config/app-config';
 import { CartService } from '../../core/services/cart.service';
@@ -15,6 +15,11 @@ declare const Stripe: (key: string) => any;
   styleUrl: './checkout.component.css'
 })
 export class CheckoutComponent implements OnInit, OnDestroy {
+  private cartService = inject(CartService);
+  private orderService = inject(OrderService);
+
+  readonly demoMode = !STRIPE_PUBLISHABLE_KEY || STRIPE_PUBLISHABLE_KEY === 'pk_test_replace_me';
+
   status = signal<'idle' | 'loading' | 'ready' | 'processing' | 'success' | 'error'>('idle');
   errorMessage = signal<string | null>(null);
   fatalError = signal(false);
@@ -31,11 +36,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   private card: any;
   private clientSecret: string | null = null;
   private orderId: number | null = null;
-
-  constructor(
-    private cartService: CartService,
-    private orderService: OrderService
-  ) {}
+  private paymentIntentId: string | null = null;
 
   ngOnInit(): void {
     if (!this.items().length) {
@@ -45,14 +46,7 @@ export class CheckoutComponent implements OnInit, OnDestroy {
       return;
     }
 
-    if (!STRIPE_PUBLISHABLE_KEY || STRIPE_PUBLISHABLE_KEY === 'pk_test_replace_me') {
-      this.status.set('error');
-      this.fatalError.set(true);
-      this.errorMessage.set('Stripe publishable key is not configured.');
-      return;
-    }
-
-    if (typeof Stripe === 'undefined') {
+    if (!this.demoMode && typeof Stripe === 'undefined') {
       this.status.set('error');
       this.fatalError.set(true);
       this.errorMessage.set('Stripe.js failed to load.');
@@ -72,14 +66,17 @@ export class CheckoutComponent implements OnInit, OnDestroy {
     this.orderService.createOrder(payload).subscribe({
       next: (order) => {
         this.orderId = order.id;
+        this.paymentIntentId = order.paymentIntentId ?? null;
         this.clientSecret = order.clientSecret ?? null;
-        if (!this.clientSecret) {
-          this.status.set('error');
-          this.fatalError.set(true);
-          this.errorMessage.set('Stripe client secret was not returned.');
-          return;
+        if (!this.demoMode) {
+          if (!this.clientSecret) {
+            this.status.set('error');
+            this.fatalError.set(true);
+            this.errorMessage.set('Stripe client secret was not returned.');
+            return;
+          }
+          this.initStripe();
         }
-        this.initStripe();
         this.status.set('ready');
       },
       error: (error) => {
@@ -91,12 +88,32 @@ export class CheckoutComponent implements OnInit, OnDestroy {
   }
 
   async pay(): Promise<void> {
-    if (!this.stripe || !this.card || !this.clientSecret || !this.orderId) {
+    this.status.set('processing');
+    this.errorMessage.set(null);
+
+    if (this.demoMode) {
+      if (!this.orderId || !this.paymentIntentId) {
+        this.status.set('error');
+        this.errorMessage.set('Payment intent was not returned.');
+        return;
+      }
+
+      this.orderService.confirmPayment(this.orderId, this.paymentIntentId).subscribe({
+        next: () => {
+          this.status.set('success');
+          this.cartService.clear();
+        },
+        error: () => {
+          this.status.set('error');
+          this.errorMessage.set('Order could not be updated.');
+        }
+      });
       return;
     }
 
-    this.status.set('processing');
-    this.errorMessage.set(null);
+    if (!this.stripe || !this.card || !this.clientSecret || !this.orderId) {
+      return;
+    }
 
     const result = await this.stripe.confirmCardPayment(this.clientSecret, {
       payment_method: {

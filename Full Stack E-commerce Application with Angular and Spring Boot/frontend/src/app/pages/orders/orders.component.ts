@@ -1,5 +1,5 @@
 import { AsyncPipe, CurrencyPipe, DatePipe, NgFor, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { OrderService } from '../../core/services/order.service';
 
 @Component({
@@ -10,7 +10,6 @@ import { OrderService } from '../../core/services/order.service';
   styleUrl: './orders.component.css'
 })
 export class OrdersComponent {
+  private orderService = inject(OrderService);
   orders$ = this.orderService.listOrders();
-
-  constructor(private orderService: OrderService) {}
 }

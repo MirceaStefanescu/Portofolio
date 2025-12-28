@@ -18,4 +18,4 @@ include:
 - `mysql-password`
 - `mysql-root-password`
 - `jwt-secret`
-- `stripe-secret`
+- `stripe-secret` (optional for demo mode)

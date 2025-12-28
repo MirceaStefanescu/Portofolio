@@ -4,24 +4,27 @@ import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
+import java.util.UUID;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 public class StripeService {
 	private final String secretKey;
+	private final boolean configured;
 
 	public StripeService(@Value("${stripe.secret-key:}") String secretKey) {
 		this.secretKey = secretKey;
-		if (secretKey != null && !secretKey.isBlank()) {
+		this.configured = secretKey != null && !secretKey.isBlank();
+		if (configured) {
 			Stripe.apiKey = secretKey;
 		}
 	}
 
-	public PaymentIntent createPaymentIntent(long amount, String currency, Long orderId) throws StripeException {
-		ensureConfigured();
+	public StripePaymentIntent createPaymentIntent(long amount, String currency, Long orderId) throws StripeException {
+		if (!configured) {
+			return mockIntent("requires_payment_method");
+		}
 		PaymentIntentCreateParams params = PaymentIntentCreateParams.builder()
 				.setAmount(amount)
 				.setCurrency(currency)
@@ -32,17 +35,21 @@ public class StripeService {
 				)
 				.putMetadata("orderId", String.valueOf(orderId))
 				.build();
-		return PaymentIntent.create(params);
+		PaymentIntent intent = PaymentIntent.create(params);
+		return new StripePaymentIntent(intent.getId(), intent.getClientSecret(), intent.getStatus());
 	}
 
-	public PaymentIntent retrievePaymentIntent(String paymentIntentId) throws StripeException {
-		ensureConfigured();
-		return PaymentIntent.retrieve(paymentIntentId);
-	}
-
-	private void ensureConfigured() {
-		if (secretKey == null || secretKey.isBlank()) {
-			throw new ResponseStatusException(HttpStatus.FAILED_DEPENDENCY, "Stripe secret key is not configured");
+	public StripePaymentIntent retrievePaymentIntent(String paymentIntentId) throws StripeException {
+		if (!configured) {
+			return new StripePaymentIntent(paymentIntentId, null, "succeeded");
 		}
+		PaymentIntent intent = PaymentIntent.retrieve(paymentIntentId);
+		return new StripePaymentIntent(intent.getId(), intent.getClientSecret(), intent.getStatus());
+	}
+
+	private StripePaymentIntent mockIntent(String status) {
+		String id = "mock_pi_" + UUID.randomUUID().toString().replace("-", "");
+		String secret = "mock_secret_" + UUID.randomUUID().toString().replace("-", "");
+		return new StripePaymentIntent(id, secret, status);
 	}
 }

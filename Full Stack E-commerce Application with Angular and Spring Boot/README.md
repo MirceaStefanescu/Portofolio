@@ -74,6 +74,10 @@ Stripe test card:
 
 - `4242 4242 4242 4242` with any future expiry and CVC
 
+Demo mode:
+
+- If Stripe keys are not configured, checkout runs in demo mode and simulates the payment intent.
+
 ### Run Backend
 
 From `backend/`:

@@ -56,6 +56,11 @@
   margin-bottom: 1rem;
 }
 
+.note {
+  margin: 0 0 1rem;
+  color: var(--muted);
+}
+
 button {
   border: none;
   background: var(--accent);

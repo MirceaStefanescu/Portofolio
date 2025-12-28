@@ -12,7 +12,6 @@ import com.mircea.portofolio.ecommerce.repository.OrderRepository;
 import com.mircea.portofolio.ecommerce.repository.ProductRepository;
 import com.mircea.portofolio.ecommerce.repository.UserRepository;
 import com.stripe.exception.StripeException;
-import com.stripe.model.PaymentIntent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
@@ -102,7 +101,7 @@ public class OrderService {
 				.setScale(0, RoundingMode.HALF_UP)
 				.longValueExact();
 
-		PaymentIntent intent;
+		StripePaymentIntent intent;
 		try {
 			intent = stripeService.createPaymentIntent(amountInMinor, currency, order.getId());
 		} catch (StripeException ex) {
@@ -111,10 +110,10 @@ public class OrderService {
 			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Stripe error: " + ex.getMessage(), ex);
 		}
 
-		order.setPaymentIntentId(intent.getId());
+		order.setPaymentIntentId(intent.id());
 		orderRepository.save(order);
 
-		return OrderResponse.from(order, intent.getClientSecret());
+		return OrderResponse.from(order, intent.clientSecret());
 	}
 
 	@Transactional(readOnly = true)
@@ -143,14 +142,14 @@ public class OrderService {
 			return OrderResponse.from(order, null);
 		}
 
-		PaymentIntent intent;
+		StripePaymentIntent intent;
 		try {
 			intent = stripeService.retrievePaymentIntent(paymentIntentId);
 		} catch (StripeException ex) {
 			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Stripe error: " + ex.getMessage(), ex);
 		}
 
-		switch (intent.getStatus()) {
+		switch (intent.status()) {
 			case "succeeded" -> order.setStatus(OrderStatus.PAID);
 			case "canceled" -> order.setStatus(OrderStatus.CANCELLED);
 			default -> order.setStatus(OrderStatus.PENDING);

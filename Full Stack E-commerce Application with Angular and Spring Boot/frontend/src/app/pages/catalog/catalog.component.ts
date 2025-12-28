@@ -1,5 +1,5 @@
 import { AsyncPipe, CurrencyPipe, NgFor, NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CartService } from '../../core/services/cart.service';
 import { ProductService } from '../../core/services/product.service';
 import { Product } from '../../core/models/product';
@@ -12,12 +12,9 @@ import { Product } from '../../core/models/product';
   styleUrl: './catalog.component.css'
 })
 export class CatalogComponent {
+  private productService = inject(ProductService);
+  private cartService = inject(CartService);
   products$ = this.productService.getProducts();
-
-  constructor(
-    private productService: ProductService,
-    private cartService: CartService
-  ) {}
 
   addToCart(product: Product): void {
     this.cartService.add(product);

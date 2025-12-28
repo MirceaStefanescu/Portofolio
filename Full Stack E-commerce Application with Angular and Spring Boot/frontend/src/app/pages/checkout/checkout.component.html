@@ -22,12 +22,21 @@
 
       <div class="payment">
         <h3>Payment details</h3>
-        <div class="card-element" id="card-element"></div>
+        <p class="note" *ngIf="demoMode">
+          Demo mode: Stripe keys are not configured, so payment will be simulated.
+        </p>
+        <div class="card-element" id="card-element" *ngIf="!demoMode"></div>
         <button
           (click)="pay()"
           [disabled]="status() !== 'ready'"
         >
-          {{ status() === 'processing' ? 'Processing...' : 'Pay now' }}
+          {{
+            status() === 'processing'
+              ? 'Processing...'
+              : demoMode
+                ? 'Place order'
+                : 'Pay now'
+          }}
         </button>
         <p class="success" *ngIf="status() === 'success'">Payment complete. Thank you.</p>
         <p class="error" *ngIf="status() === 'error'">{{ errorMessage() }}</p>
