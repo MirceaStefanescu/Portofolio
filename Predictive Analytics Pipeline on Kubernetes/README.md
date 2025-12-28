@@ -147,6 +147,12 @@ Secrets: use `.env` (see `.env.example`). Demo credentials are for local use onl
 - Add OpenTelemetry traces and publish a small throughput benchmark.
 - Tradeoff: dual storage (PostgreSQL + Elasticsearch) improves query flexibility at the cost of higher operational overhead.
 
+## Performance
+Local benchmark harness (optional):
+- Script: `perf/k6/pipeline-load.js`
+- Run: `k6 run perf/k6/pipeline-load.js` (set `BASE_URL` to target another host)
+- Results: TBD (record throughput and p95 end-to-end latency)
+
 ## API
 - OpenAPI: `docs/openapi.yaml`
 - Usage examples: `docs/api.md`
