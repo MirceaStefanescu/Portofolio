@@ -19,7 +19,7 @@ NEW_RELIC_LICENSE_KEY ?=
 NEW_RELIC_CLUSTER_NAME ?= $(KUBECOST_CLUSTER_ID)
 
 .PHONY: dev kind-up namespace metrics-server kubecost minio velero workloads load unload backup status \
-	port-forward-kubecost port-forward-grafana newrelic destroy test
+	port-forward-kubecost port-forward-grafana newrelic destroy lint test build
 
 dev: kind-up namespace metrics-server kubecost minio velero workloads
 
@@ -99,7 +99,14 @@ destroy:
 	kind delete cluster --name $(CLUSTER_NAME)
 
 test:
+	$(MAKE) lint
+
+lint:
+	kubectl apply --dry-run=client --validate=false -f k8s/namespace.yaml
 	kubectl apply --dry-run=client --validate=false -f k8s/workloads/cpu-demo.yaml
 	kubectl apply --dry-run=client --validate=false -f k8s/workloads/cpu-demo-hpa.yaml
 	kubectl apply --dry-run=client --validate=false -f k8s/workloads/load-generator.yaml
 	kubectl apply --dry-run=client --validate=false -f k8s/velero/backup.yaml
+
+build:
+	tar -czf /tmp/finops-manifests.tgz k8s
