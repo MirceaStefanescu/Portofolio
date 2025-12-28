@@ -11,4 +11,11 @@ Manifests live under `docs/k8s/`:
 - `mysql-statefulset.yaml`
 - `ingress.yaml`
 
-Remember to create the `ecommerce-secrets` secret before deploying.
+Remember to create the `ecommerce-secrets` secret before deploying. At minimum,
+include:
+
+- `mysql-username`
+- `mysql-password`
+- `mysql-root-password`
+- `jwt-secret`
+- `stripe-secret`

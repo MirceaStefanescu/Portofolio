@@ -20,7 +20,7 @@ deployment.
 
 ## Status
 
-- Scaffolded with working API contracts and UI pages
+- End-to-end flow with auth, catalog, cart, orders, and Stripe checkout
 
 ## Structure
 
@@ -33,7 +33,7 @@ deployment.
 - Product catalog with category browsing
 - Shopping cart with add/remove/update quantity
 - User authentication and protected checkout
-- Stripe payment intent creation
+- Stripe payment intents and confirmation
 - MySQL-backed persistence for products, users, and orders
 - Responsive UI optimized for desktop and mobile
 - Containerized deployment with Docker and Kubernetes manifests
@@ -68,6 +68,11 @@ Recommended variables:
 Frontend API base URL:
 
 - Update `frontend/src/app/core/config/app-config.ts` to match your backend URL.
+- Set `STRIPE_PUBLISHABLE_KEY` in `frontend/src/app/core/config/app-config.ts`.
+
+Stripe test card:
+
+- `4242 4242 4242 4242` with any future expiry and CVC
 
 ### Run Backend
 
@@ -103,7 +108,9 @@ npm test
 - `GET /api/products/{id}`
 - `POST /api/auth/register`
 - `POST /api/auth/login`
-- `POST /api/checkout/payment-intent`
+- `POST /api/orders`
+- `GET /api/orders`
+- `POST /api/orders/{id}/confirm`
 
 Stripe amount values are expected in the smallest currency unit (e.g., cents).
 
@@ -112,6 +119,13 @@ Stripe amount values are expected in the smallest currency unit (e.g., cents).
 From the module root:
 
 ```bash
+docker compose up --build
+```
+
+Or run everything from the repo root:
+
+```bash
+cd "Full Stack E-commerce Application with Angular and Spring Boot"
 docker compose up --build
 ```
 

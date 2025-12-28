@@ -35,7 +35,7 @@ public class Order {
 	@Column(nullable = false, precision = 12, scale = 2)
 	private BigDecimal totalAmount;
 
-	@Column(length = 3)
+	@Column(nullable = false, length = 3)
 	private String currency = "usd";
 
 	@Column(length = 128)

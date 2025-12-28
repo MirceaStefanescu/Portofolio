@@ -26,6 +26,7 @@ public class OrderItem {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
+	@Column(nullable = false)
 	private int quantity;
 
 	@Column(nullable = false, precision = 12, scale = 2)

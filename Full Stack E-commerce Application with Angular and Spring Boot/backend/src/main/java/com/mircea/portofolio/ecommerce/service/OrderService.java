@@ -73,6 +73,9 @@ public class OrderService {
 
 		BigDecimal total = BigDecimal.ZERO;
 		for (OrderItemRequest itemRequest : request.items()) {
+			if (itemRequest.quantity() < 1) {
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Quantity must be at least 1");
+			}
 			Product product = products.get(itemRequest.productId());
 			if (product == null) {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Product not found");
@@ -103,6 +106,8 @@ public class OrderService {
 		try {
 			intent = stripeService.createPaymentIntent(amountInMinor, currency, order.getId());
 		} catch (StripeException ex) {
+			order.setStatus(OrderStatus.CANCELLED);
+			orderRepository.save(order);
 			throw new ResponseStatusException(HttpStatus.BAD_GATEWAY, "Stripe error: " + ex.getMessage(), ex);
 		}
 

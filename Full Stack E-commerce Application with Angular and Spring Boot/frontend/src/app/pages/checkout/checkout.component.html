@@ -10,7 +10,7 @@
         <h3>Order summary</h3>
         <ul>
           <li *ngFor="let item of items()">
-            <span>{{ item.product.name }} × {{ item.quantity }}</span>
+            <span>{{ item.product.name }} x {{ item.quantity }}</span>
             <span>{{ item.product.price * item.quantity | currency:'USD' }}</span>
           </li>
         </ul>

@@ -1,7 +1,7 @@
 import { NgIf } from '@angular/common';
 import { Component, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../core/services/auth.service';
 
 @Component({
@@ -20,7 +20,11 @@ export class LoginComponent {
     password: ['', [Validators.required]]
   });
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {}
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {}
 
   submit(): void {
     if (this.form.invalid) {
@@ -34,6 +38,7 @@ export class LoginComponent {
     this.authService.login(this.form.getRawValue()).subscribe({
       next: () => {
         this.status.set('success');
+        this.router.navigate(['/catalog']);
       },
       error: () => {
         this.status.set('error');
