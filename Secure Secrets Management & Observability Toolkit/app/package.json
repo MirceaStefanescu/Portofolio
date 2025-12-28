@@ -1,0 +1,16 @@
+{
+  "name": "secure-secrets-toolkit-app",
+  "version": "1.0.0",
+  "description": "Demo service for Vault-backed secrets and Prometheus metrics.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "node-vault": "^0.9.22",
+    "prom-client": "^15.1.0",
+    "winston": "^3.13.0"
+  }
+}

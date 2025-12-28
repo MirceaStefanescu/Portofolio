@@ -3,21 +3,22 @@
 Secure secrets management and observability toolkit for platform teams that need automated secrets rotation and compliance-ready telemetry on Kubernetes.
 
 ## Features
-- HashiCorp Vault for dynamic secrets, policy enforcement, and audit logging
-- Terraform modules for Vault policies, Kubernetes auth roles, and observability stack provisioning
-- CI/CD pipelines that rotate credentials and revoke leaked secrets automatically
-- Centralized log collection into Elasticsearch with Kibana for investigations
-- Prometheus metrics with Grafana dashboards for SLOs and compliance reporting
-- Kubernetes-native deployment with RBAC and namespace isolation
+- HashiCorp Vault with AppRole auth, policies, and audit logs
+- Demo service that pulls secrets from Vault and exposes Prometheus metrics
+- Filebeat shipping application and Vault audit logs to Elasticsearch with Kibana search
+- Terraform modules for Vault policies and Helm-based observability provisioning
+- CI/CD rotation workflow sample for automated credentials management
+- Docker Compose stack for end-to-end local verification
 
 ## Tech stack (and why)
 - HashiCorp Vault: dynamic secrets, short-lived tokens, and audit trails.
-- Terraform: repeatable IaC for Vault policies and observability stack.
-- Kubernetes: workload identity and namespace-level access control.
+- Terraform + Helm: reusable IaC modules for policies and observability stacks.
+- Docker Compose: reproducible local stack for demos and validation.
 - Elasticsearch + Kibana: searchable logs and compliance-friendly audits.
-- Prometheus: metrics collection and alerting rules.
-- Grafana: unified dashboards across logs and metrics.
-- CI/CD: pipeline automation for secrets rotation and policy updates.
+- Prometheus: metrics collection for service health and rotation events.
+- Grafana: dashboards for SLOs and compliance reporting.
+- Node.js: lightweight demo service with Vault integration and metrics.
+- CI/CD: rotation automation hooks.
 
 ## Demo
 - Live: TBD
@@ -27,50 +28,71 @@ Secure secrets management and observability toolkit for platform teams that need
 ## Quickstart (local)
 Prereqs:
 - Docker and Docker Compose
-- kubectl and kind or minikube
-- Terraform, Vault CLI, Helm
+- Make (optional)
 
 Run:
 ```
-# TODO: add docker-compose.yml, Helm charts, and Terraform modules.
-# Expected once scaffolding exists:
-# make dev
+make dev
+# or: docker compose up --build
+```
+
+Verify:
+```
+curl http://localhost:8080/health
+curl http://localhost:8080/secret
+```
+
+Rotate a secret:
+```
+make rotate-secret
+```
+
+Open dashboards:
+- Vault: http://localhost:8200 (token: dev-root-token)
+- Kibana: http://localhost:5601
+- Prometheus: http://localhost:9090
+- Grafana: http://localhost:3000 (admin / admin)
+
+Kibana note: create an index pattern `filebeat-*` to view logs from the demo app and Vault audit stream.
+
+Terraform (optional):
+```
+cd terraform/examples/local-vault
+export VAULT_TOKEN=dev-root-token
+terraform init
+terraform apply -var="vault_token=${VAULT_TOKEN}"
 ```
 
 ## Architecture
 ```mermaid
 flowchart LR
   Dev[Platform Engineer] --> CI[CI/CD Pipeline]
-  CI --> TF[Terraform Modules]
-  TF --> Vault[HashiCorp Vault]
-  TF --> Obs[Observability Stack]
-  Vault --> K8s[Kubernetes Apps]
-  K8s --> VaultAgent[Vault Agent / Sidecar]
-  K8s --> Logs[Logs]
-  K8s --> Metrics[Metrics]
-  Logs --> Elastic[Elasticsearch]
+  CI --> Vault[HashiCorp Vault]
+  Vault --> App[Demo Service]
+  App --> Logs[App Logs]
+  App --> Metrics[Prometheus Metrics]
+  Vault --> Audit[Vault Audit Logs]
+  Logs --> Filebeat[Filebeat]
+  Audit --> Filebeat
+  Filebeat --> Elastic[Elasticsearch]
   Elastic --> Kibana[Kibana]
   Metrics --> Prom[Prometheus]
   Prom --> Grafana[Grafana]
-  Vault --> Audit[Vault Audit Logs]
-  Audit --> Elastic
 ```
 
-Vault brokers secrets for workloads via Kubernetes auth and Vault Agent injection. Terraform provisions Vault policies, auth roles, and the observability stack. CI/CD pipelines automate secrets rotation and policy updates. Logs are centralized in Elasticsearch with Kibana for investigations, while Prometheus and Grafana provide metrics and dashboards for compliance and reliability.
+Vault brokers secrets for workloads via AppRole and audit logging. The demo service fetches secrets on a schedule, emits metrics, and logs access events. Filebeat forwards app logs and Vault audit logs to Elasticsearch, while Prometheus and Grafana surface health and rotation visibility.
 
 ## Tests
 ```
-# TODO: add unit tests for Terraform modules and pipeline checks.
-# Expected once scaffolding exists:
-# make test
+make test
 ```
 
 ## Security
-Secrets: use `.env` (see `.env.example`). Vault enforces least privilege with short-lived tokens, audit logging, and revocation on rotation. Restrict access with Kubernetes RBAC, namespace boundaries, and network policies. Enable secret scanning in GitHub.
+Secrets: use `.env` (see `.env.example`). Vault runs in dev mode for local demos, and Elasticsearch/Kibana security is disabled for simplicity. In production, enable TLS, RBAC, network policies, and authentication for Elastic and Grafana, and use auto-unseal with KMS.
 
 ## Roadmap / tradeoffs
 - Add policy-as-code checks (OPA/Conftest) for Vault and Kubernetes manifests.
-- Add secret rotation metrics and alerting for failed rotations.
+- Add secret rotation alerts in Grafana and failed-rotation runbooks.
 - Support cloud KMS auto-unseal and multi-region Vault replication.
 - Tradeoff: running Vault plus Elastic and Prometheus adds operational overhead in exchange for compliance and visibility.
 

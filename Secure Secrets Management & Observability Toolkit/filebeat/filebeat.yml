@@ -1,0 +1,24 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /var/log/app/app.log
+    fields:
+      service: demo-app
+      log_type: app
+    fields_under_root: true
+
+  - type: log
+    enabled: true
+    paths:
+      - /vault/audit/audit.log
+    fields:
+      service: vault
+      log_type: audit
+    fields_under_root: true
+
+output.elasticsearch:
+  hosts: ["http://elasticsearch:9200"]
+
+setup.kibana:
+  host: "http://kibana:5601"
