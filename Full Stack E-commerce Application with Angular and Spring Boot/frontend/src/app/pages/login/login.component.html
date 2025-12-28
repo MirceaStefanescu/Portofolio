@@ -10,7 +10,7 @@
       </label>
       <label>
         Password
-        <input type="password" formControlName="password" placeholder="••••••••" />
+        <input type="password" formControlName="password" placeholder="password" />
       </label>
       <button type="submit" [disabled]="status() === 'loading'">
         {{ status() === 'loading' ? 'Signing in...' : 'Sign in' }}
@@ -19,5 +19,6 @@
 
     <p class="status" *ngIf="status() === 'error'">{{ errorMessage() }}</p>
     <p class="status success" *ngIf="status() === 'success'">Signed in successfully.</p>
+    <p class="hint">New here? <a routerLink="/register">Create an account</a>.</p>
   </div>
 </section>

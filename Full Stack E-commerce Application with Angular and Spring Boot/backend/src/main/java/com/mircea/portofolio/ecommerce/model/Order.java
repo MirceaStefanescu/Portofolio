@@ -12,6 +12,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -31,7 +32,14 @@ public class Order {
 	@OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrderItem> items = new ArrayList<>();
 
+	@Column(nullable = false, precision = 12, scale = 2)
 	private BigDecimal totalAmount;
+
+	@Column(length = 3)
+	private String currency = "usd";
+
+	@Column(length = 128)
+	private String paymentIntentId;
 
 	@Enumerated(EnumType.STRING)
 	private OrderStatus status = OrderStatus.PENDING;
@@ -76,6 +84,22 @@ public class Order {
 
 	public void setTotalAmount(BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
+	}
+
+	public String getCurrency() {
+		return currency;
+	}
+
+	public void setCurrency(String currency) {
+		this.currency = currency;
+	}
+
+	public String getPaymentIntentId() {
+		return paymentIntentId;
+	}
+
+	public void setPaymentIntentId(String paymentIntentId) {
+		this.paymentIntentId = paymentIntentId;
 	}
 
 	public OrderStatus getStatus() {

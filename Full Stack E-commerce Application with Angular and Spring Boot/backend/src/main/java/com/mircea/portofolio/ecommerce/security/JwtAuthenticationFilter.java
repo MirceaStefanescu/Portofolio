@@ -29,7 +29,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 		if (header != null && header.startsWith("Bearer ")) {
 			String token = header.substring(7);
-			if (jwtService.isTokenValid(token)) {
+			if (SecurityContextHolder.getContext().getAuthentication() == null && jwtService.isTokenValid(token)) {
 				String subject = jwtService.getSubject(token);
 				UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
 					subject,

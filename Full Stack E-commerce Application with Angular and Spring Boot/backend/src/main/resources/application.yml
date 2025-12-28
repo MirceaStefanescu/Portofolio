@@ -26,7 +26,7 @@ management:
 app:
   jwt:
     issuer: portofolio
-    secret: ${JWT_SECRET:change_me}
+    secret: ${JWT_SECRET:change_me_to_a_long_random_string_at_least_32_bytes}
     ttl-minutes: ${JWT_TTL_MINUTES:60}
 
 stripe:

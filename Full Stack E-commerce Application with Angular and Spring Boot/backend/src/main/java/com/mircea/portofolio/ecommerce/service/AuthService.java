@@ -24,7 +24,7 @@ public class AuthService {
 	}
 
 	public AuthResponse register(RegisterRequest request) {
-		validateRequest(request.email(), request.password());
+		validateRegister(request);
 		String normalizedEmail = request.email().trim().toLowerCase(Locale.ROOT);
 		if (userRepository.findByEmail(normalizedEmail).isPresent()) {
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already registered");
@@ -48,6 +48,13 @@ public class AuthService {
 	private void validateRequest(String email, String password) {
 		if (email == null || email.isBlank() || password == null || password.isBlank()) {
 			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email and password are required");
+		}
+	}
+
+	private void validateRegister(RegisterRequest request) {
+		validateRequest(request.email(), request.password());
+		if (request.fullName() == null || request.fullName().isBlank()) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Full name is required");
 		}
 	}
 

@@ -8,6 +8,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Column;
 import java.math.BigDecimal;
 
 @Entity
@@ -27,6 +28,7 @@ public class OrderItem {
 
 	private int quantity;
 
+	@Column(nullable = false, precision = 12, scale = 2)
 	private BigDecimal unitPrice;
 
 	public OrderItem() {

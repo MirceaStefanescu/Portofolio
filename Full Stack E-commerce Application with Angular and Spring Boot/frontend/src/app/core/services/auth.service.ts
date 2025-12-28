@@ -26,6 +26,10 @@ export class AuthService {
     localStorage.removeItem(this.tokenKey);
   }
 
+  isAuthenticated(): boolean {
+    return !!this.getToken();
+  }
+
   getToken(): string | null {
     return localStorage.getItem(this.tokenKey);
   }

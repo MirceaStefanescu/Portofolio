@@ -4,6 +4,7 @@ import com.mircea.portofolio.ecommerce.dto.AuthRequest;
 import com.mircea.portofolio.ecommerce.dto.AuthResponse;
 import com.mircea.portofolio.ecommerce.dto.RegisterRequest;
 import com.mircea.portofolio.ecommerce.service.AuthService;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +20,12 @@ public class AuthController {
 	}
 
 	@PostMapping("/register")
-	public AuthResponse register(@RequestBody RegisterRequest request) {
+	public AuthResponse register(@Valid @RequestBody RegisterRequest request) {
 		return authService.register(request);
 	}
 
 	@PostMapping("/login")
-	public AuthResponse login(@RequestBody AuthRequest request) {
+	public AuthResponse login(@Valid @RequestBody AuthRequest request) {
 		return authService.login(request);
 	}
 }
