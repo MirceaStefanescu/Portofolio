@@ -44,6 +44,10 @@ make demo
 
 Local API: `http://localhost:8090`
 
+Config:
+- `cp .env.example .env` and adjust secrets for local runs.
+- For non-Docker runs, set `QDRANT_URL=http://localhost:6333`.
+
 ## Architecture
 ```mermaid
 flowchart LR
@@ -74,7 +78,7 @@ make test
 ```
 
 ## Security
-Secrets: use `.env` (see `.env.example`). JWT-based authentication and RBAC restrict access to endpoints; the dev token endpoint is gated by `X-Dev-Key` and should be disabled in production. Threat model assumes untrusted questions/documents and potential prompt injection; mitigate with RBAC, audit logs, and retrieval filtering. Use Kubernetes RBAC, network policies, and least-privilege service accounts for production.
+Secrets: use `.env` (see `.env.example`). JWT-based authentication and RBAC restrict access to endpoints; the dev token endpoint is gated by `X-Dev-Key` and should be disabled in production. Threat model basics in `docs/threat-model.md` cover prompt injection and data exfiltration risks. Use Kubernetes RBAC, network policies, and least-privilege service accounts for production.
 
 ## Notes / limitations
 - Local mode uses deterministic hash-based embeddings to stay self-contained; swap in LangChain4j-backed embeddings/LLMs for production quality.
