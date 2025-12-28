@@ -7,6 +7,10 @@ root in its own folder.
 
 - `<Project Name>/` - one project per folder at the repo root
 
+## Portfolio launcher
+- Run: `./portfolio-launcher.sh --list`
+- Runbook: `PORTFOLIO_RUNBOOK.md`
+
 ## Project Guidelines
 
 - Each project includes a `README.md` with:
