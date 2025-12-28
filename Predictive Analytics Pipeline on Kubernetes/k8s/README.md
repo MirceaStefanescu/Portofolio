@@ -2,7 +2,6 @@
 
 ## Prereqs
 - A Kubernetes cluster and `kubectl` configured.
-- Kafka, PostgreSQL, and Elasticsearch reachable from the cluster.
 - KEDA installed for Kafka-lag autoscaling.
 
 ## Install dependencies (example)
@@ -13,20 +12,22 @@ helm repo update
 helm install keda kedacore/keda -n keda --create-namespace
 ```
 
-Kafka/PostgreSQL/Elasticsearch: use Helm charts or managed services and update `k8s/configmap.yaml` with their endpoints.
-
-## Build and push images
+Without Helm:
 ```
-docker build -t ghcr.io/your-user/predictive-analytics-api:latest ../api
-
-docker build -t ghcr.io/your-user/predictive-analytics-flink-job:latest ../flink
-
-docker push ghcr.io/your-user/predictive-analytics-api:latest
-
-docker push ghcr.io/your-user/predictive-analytics-flink-job:latest
+kubectl apply --server-side -f https://github.com/kedacore/keda/releases/download/v2.13.0/keda-2.13.0.yaml
 ```
 
-Update the image references in:
+Kafka/PostgreSQL/Elasticsearch are provided as dev-friendly manifests in `k8s/`.
+
+## Build images
+Docker Desktop / local cluster (uses local Docker images):
+```
+docker build -t predictive-analytics-api:latest ../api
+
+docker build -t predictive-analytics-flink-job:latest ../flink
+```
+
+Remote cluster: push to your registry and update the image references in:
 - `k8s/api-deployment.yaml`
 - `k8s/flink-job.yaml`
 
@@ -35,6 +36,12 @@ Update the image references in:
 kubectl apply -f k8s/namespace.yaml
 kubectl apply -n predictive-analytics -f k8s/configmap.yaml
 kubectl apply -n predictive-analytics -f k8s/secret.yaml
+kubectl apply -n predictive-analytics -f k8s/zookeeper.yaml
+kubectl apply -n predictive-analytics -f k8s/kafka.yaml
+kubectl apply -n predictive-analytics -f k8s/kafka-init-job.yaml
+kubectl apply -n predictive-analytics -f k8s/postgres-init-configmap.yaml
+kubectl apply -n predictive-analytics -f k8s/postgres.yaml
+kubectl apply -n predictive-analytics -f k8s/elasticsearch.yaml
 kubectl apply -n predictive-analytics -f k8s/flink-jobmanager.yaml
 kubectl apply -n predictive-analytics -f k8s/flink-taskmanager.yaml
 kubectl apply -n predictive-analytics -f k8s/flink-job.yaml
@@ -56,5 +63,5 @@ curl http://localhost:8082/api/health
 ```
 
 ## Notes
-- Update `k8s/configmap.yaml` with your Kafka, PostgreSQL, and Elasticsearch endpoints.
+- Elasticsearch may require `vm.max_map_count=262144` on some Linux hosts.
 - The KEDA ScaledObject targets the `flink-taskmanager` deployment and uses Kafka lag on the `events` topic.

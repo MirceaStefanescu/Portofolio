@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: flink-job
-          image: ghcr.io/your-user/predictive-analytics-flink-job:latest
+          image: predictive-analytics-flink-job:latest
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:

@@ -21,9 +21,9 @@ Event-driven predictive analytics pipeline for data and platform teams that need
 
 ## Demo
 - Live: TBD
-- Video or GIF: TBD
-- Screenshot: `demo/pipeline-overview.svg`
-- Screenshot: `demo/grafana-dashboard.svg`
+- Video or GIF: `demo/pipeline-demo.gif`
+- Screenshot: `demo/grafana-dashboard.png`
+- Screenshot: `demo/flink-ui.png`
 
 ## Quickstart (local)
 Prereqs:
