@@ -10,12 +10,17 @@ deployment.
 
 ## Tech Stack
 
-- Angular
-- Spring Boot
+- Angular (latest)
+- Spring Boot 4
+- Java 21
 - MySQL
 - Stripe API
 - Docker
 - Kubernetes
+
+## Status
+
+- Scaffolded with working API contracts and UI pages
 
 ## Structure
 
@@ -25,10 +30,10 @@ deployment.
 
 ## Key Features
 
-- Product catalog with search, filters, and category browsing
+- Product catalog with category browsing
 - Shopping cart with add/remove/update quantity
 - User authentication and protected checkout
-- Stripe payment processing for orders
+- Stripe payment intent creation
 - MySQL-backed persistence for products, users, and orders
 - Responsive UI optimized for desktop and mobile
 - Containerized deployment with Docker and Kubernetes manifests
@@ -39,8 +44,8 @@ deployment.
 
 - Node.js 20+ and npm
 - Angular CLI
-- Java 17+
-- Maven or Gradle
+- Java 21
+- Maven
 - MySQL 8+
 - A Stripe account and API keys
 
@@ -48,18 +53,21 @@ deployment.
 
 Create environment files:
 
-- `backend/.env` for database and Stripe settings
-- `frontend/.env` for API base URL and Stripe publishable key
+- `backend/.env` (copy `backend/.env.example`)
 
-Suggested variables:
+Recommended variables:
 
 - `SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/ecommerce`
-- `SPRING_DATASOURCE_USERNAME=your_user`
-- `SPRING_DATASOURCE_PASSWORD=your_password`
+- `SPRING_DATASOURCE_USERNAME=ecommerce`
+- `SPRING_DATASOURCE_PASSWORD=ecommerce`
+- `JWT_SECRET=change_me_to_a_long_random_string_at_least_32_bytes`
+- `JWT_TTL_MINUTES=60`
 - `STRIPE_SECRET_KEY=sk_test_...`
-- `JWT_SECRET=your_jwt_secret`
-- `NG_APP_API_BASE_URL=http://localhost:8080`
-- `NG_APP_STRIPE_PUBLISHABLE_KEY=pk_test_...`
+- `STRIPE_WEBHOOK_SECRET=whsec_...`
+
+Frontend API base URL:
+
+- Update `frontend/src/app/core/config/app-config.ts` to match your backend URL.
 
 ### Run Backend
 
@@ -69,19 +77,13 @@ From `backend/`:
 mvn spring-boot:run
 ```
 
-Or with Gradle:
-
-```bash
-./gradlew bootRun
-```
-
 ### Run Frontend
 
 From `frontend/`:
 
 ```bash
 npm install
-ng serve
+npm run start
 ```
 
 ### Run Tests
@@ -92,6 +94,25 @@ mvn test
 
 # frontend
 npm test
+```
+
+## API Endpoints
+
+- `GET /api/health`
+- `GET /api/products`
+- `GET /api/products/{id}`
+- `POST /api/auth/register`
+- `POST /api/auth/login`
+- `POST /api/checkout/payment-intent`
+
+Stripe amount values are expected in the smallest currency unit (e.g., cents).
+
+## Docker
+
+From the module root:
+
+```bash
+docker compose up --build
 ```
 
 ## Deployment

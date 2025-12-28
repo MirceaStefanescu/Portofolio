@@ -1,0 +1,34 @@
+<section class="catalog">
+  <div class="catalog-header">
+    <div>
+      <h2>Product catalog</h2>
+      <p>Curated products seeded from the backend API.</p>
+    </div>
+    <span class="badge">Live data</span>
+  </div>
+
+  <ng-container *ngIf="products$ | async as products">
+    <div class="grid" *ngIf="products.length; else empty">
+      <article class="card" *ngFor="let product of products">
+        <div class="image" [style.background-image]="'url(' + product.imageUrl + ')'">
+          <span class="category">{{ product.category || 'General' }}</span>
+        </div>
+        <div class="content">
+          <h3>{{ product.name }}</h3>
+          <p>{{ product.description }}</p>
+          <div class="meta">
+            <span class="price">{{ product.price | currency:'USD' }}</span>
+            <button (click)="addToCart(product)">Add to cart</button>
+          </div>
+        </div>
+      </article>
+    </div>
+  </ng-container>
+
+  <ng-template #empty>
+    <div class="empty-state">
+      <h3>No products yet</h3>
+      <p>Seed the database or start the backend to fetch products.</p>
+    </div>
+  </ng-template>
+</section>

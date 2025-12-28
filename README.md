@@ -9,13 +9,13 @@ root in its own folder.
 
 ## Project Guidelines
 
-- Each project should include a `README.md` with:
+- Each project includes a `README.md` with:
   - short description
   - tech stack
   - current status
   - how to run/build/test
-- Keep project directories self-contained.
-- If a project has separate apps, use subfolders such as:
+- Project directories are self-contained.
+- If a project has separate apps, subfolders are used such as:
   - `frontend/`
   - `backend/`
   - `infra/`

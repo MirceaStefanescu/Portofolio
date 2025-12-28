@@ -1,4 +1,14 @@
 # Module Docs
 
-Place module-specific documentation here, such as architecture notes, API
-contracts, and deployment guides.
+This folder contains supporting documentation for the e-commerce module.
+
+## Kubernetes
+
+Manifests live under `docs/k8s/`:
+
+- `backend-deployment.yaml`
+- `frontend-deployment.yaml`
+- `mysql-statefulset.yaml`
+- `ingress.yaml`
+
+Remember to create the `ecommerce-secrets` secret before deploying.

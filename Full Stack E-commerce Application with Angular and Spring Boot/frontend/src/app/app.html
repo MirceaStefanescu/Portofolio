@@ -1,0 +1,34 @@
+<div class="layout">
+  <header class="site-header">
+    <div class="brand">
+      <div class="brand-mark">PF</div>
+      <div class="brand-copy">
+        <h1>Portofolio Commerce</h1>
+        <p>Angular + Spring Boot storefront</p>
+      </div>
+    </div>
+    <nav class="nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      <a routerLink="/catalog" routerLinkActive="active">Catalog</a>
+      <a routerLink="/cart" routerLinkActive="active">Cart</a>
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+    </nav>
+  </header>
+
+  <main class="site-main">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="site-footer">
+    <div>
+      <strong>Portofolio Commerce</strong>
+      <span>Full stack e-commerce reference build.</span>
+    </div>
+    <div class="footer-links">
+      <span>Docker</span>
+      <span>MySQL</span>
+      <span>Stripe</span>
+      <span>Kubernetes</span>
+    </div>
+  </footer>
+</div>

@@ -1,0 +1,23 @@
+<section class="auth">
+  <div class="card">
+    <h2>Sign in</h2>
+    <p>Use your account to access orders and checkout.</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <label>
+        Email
+        <input type="email" formControlName="email" placeholder="you@example.com" />
+      </label>
+      <label>
+        Password
+        <input type="password" formControlName="password" placeholder="••••••••" />
+      </label>
+      <button type="submit" [disabled]="status() === 'loading'">
+        {{ status() === 'loading' ? 'Signing in...' : 'Sign in' }}
+      </button>
+    </form>
+
+    <p class="status" *ngIf="status() === 'error'">{{ errorMessage() }}</p>
+    <p class="status success" *ngIf="status() === 'success'">Signed in successfully.</p>
+  </div>
+</section>
