@@ -1,0 +1,14 @@
+mode: standalone
+
+rootUser: minioadmin
+rootPassword: minioadmin
+
+buckets:
+  - name: velero
+    policy: none
+    purge: false
+    versioning: false
+
+persistence:
+  enabled: true
+  size: 10Gi

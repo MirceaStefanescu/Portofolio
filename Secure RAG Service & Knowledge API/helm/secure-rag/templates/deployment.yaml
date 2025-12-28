@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "secure-rag.fullname" . }}
+  labels:
+    {{- include "secure-rag.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "secure-rag.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "secure-rag.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ include "secure-rag.fullname" . }}
+      containers:
+        - name: api
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: QDRANT_URL
+              value: {{ .Values.env.qdrantUrl | quote }}
+            - name: QDRANT_COLLECTION
+              value: {{ .Values.env.qdrantCollection | quote }}
+            - name: QDRANT_API_KEY
+              value: {{ .Values.env.qdrantApiKey | quote }}
+            - name: JWT_SECRET
+              value: {{ .Values.env.jwtSecret | quote }}
+            - name: JWT_ISSUER
+              value: {{ .Values.env.jwtIssuer | quote }}
+            - name: JWT_TTL_SECONDS
+              value: {{ .Values.env.jwtTtlSeconds | quote }}
+            - name: DEV_API_KEY
+              value: {{ .Values.env.devApiKey | quote }}
+            - name: RAG_VECTOR_SIZE
+              value: {{ .Values.env.ragVectorSize | quote }}
+            - name: RAG_CHUNK_SIZE
+              value: {{ .Values.env.ragChunkSize | quote }}
+            - name: RAG_CHUNK_OVERLAP
+              value: {{ .Values.env.ragChunkOverlap | quote }}
+            - name: RAG_TOP_K
+              value: {{ .Values.env.ragTopK | quote }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- if .Values.spreadAcrossZones }}
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: {{ include "secure-rag.name" . }}
+              app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

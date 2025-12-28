@@ -1,0 +1,16 @@
+global:
+  clusterId: finops-local
+  prometheus:
+    enabled: true
+  grafana:
+    enabled: true
+
+persistentVolume:
+  enabled: true
+  size: 8Gi
+
+grafana:
+  adminPassword: admin
+  persistence:
+    enabled: true
+    size: 5Gi

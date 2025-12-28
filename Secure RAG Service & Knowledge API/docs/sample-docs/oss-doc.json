@@ -1,0 +1,7 @@
+{
+  "documentId": "oss-secure-rag-overview",
+  "title": "Secure RAG Service Overview",
+  "source": "docs/secure-rag.md",
+  "tags": ["rag", "security", "jwt", "qdrant"],
+  "content": "Secure RAG Service ingests open-source documentation, chunks it into passages, embeds each passage, and stores vectors in Qdrant. Queries are embedded using the same method and used to retrieve the most relevant chunks.\n\nAuthentication uses JWTs issued by the auth endpoint. Access is enforced with role-based access control (RBAC) so only ADMIN can ingest and USER can query. Audit logs record all ingest and query actions for compliance.\n\nVector data is replicated across availability zones in production, and backups are handled with Velero. Observability is managed with New Relic traces, metrics, and logs. Helm charts deploy the service to multi-cloud Kubernetes clusters for high availability."
+}

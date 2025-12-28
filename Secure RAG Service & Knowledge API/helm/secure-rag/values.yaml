@@ -1,0 +1,45 @@
+replicaCount: 2
+
+image:
+  repository: secure-rag-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+resources: {}
+
+env:
+  qdrantUrl: http://qdrant:6333
+  qdrantCollection: rag_docs
+  qdrantApiKey: ""
+  jwtSecret: dev-secret-change-this-dev-secret-change-this
+  jwtIssuer: secure-rag
+  jwtTtlSeconds: "3600"
+  devApiKey: dev-api-key
+  ragVectorSize: "64"
+  ragChunkSize: "800"
+  ragChunkOverlap: "120"
+  ragTopK: "4"
+
+serviceAccount:
+  create: true
+  name: ""
+
+autoscaling:
+  enabled: true
+  minReplicas: 2
+  maxReplicas: 6
+  targetCPUUtilizationPercentage: 70
+
+podAnnotations: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+spreadAcrossZones: true

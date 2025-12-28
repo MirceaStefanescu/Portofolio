@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="540" viewBox="0 0 960 540">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f7f2e8" />
+      <stop offset="100%" stop-color="#e8f1f7" />
+    </linearGradient>
+    <style>
+      .box { fill: #ffffff; stroke: #2f3b4c; stroke-width: 2; rx: 10; }
+      .title { font: 700 20px Helvetica, Arial, sans-serif; fill: #2f3b4c; }
+      .label { font: 600 14px Helvetica, Arial, sans-serif; fill: #2f3b4c; }
+      .muted { font: 400 12px Helvetica, Arial, sans-serif; fill: #5a6b7d; }
+      .arrow { stroke: #2f3b4c; stroke-width: 2; marker-end: url(#arrowhead); }
+    </style>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2f3b4c" />
+    </marker>
+  </defs>
+
+  <rect width="960" height="540" fill="url(#bg)" />
+
+  <text x="40" y="50" class="title">Secure RAG Service &amp; Knowledge API</text>
+  <text x="40" y="78" class="muted">Overview: ingestion, vector store, and secured Q/A API</text>
+
+  <rect x="60" y="120" width="220" height="90" class="box" />
+  <text x="80" y="160" class="label">Ingestion</text>
+  <text x="80" y="182" class="muted">Docs + chunking</text>
+
+  <rect x="330" y="120" width="220" height="90" class="box" />
+  <text x="350" y="160" class="label">Embedding</text>
+  <text x="350" y="182" class="muted">Vectorization</text>
+
+  <rect x="600" y="120" width="250" height="90" class="box" />
+  <text x="620" y="160" class="label">Qdrant Vector Store</text>
+  <text x="620" y="182" class="muted">Replicated, backed up</text>
+
+  <rect x="330" y="270" width="250" height="110" class="box" />
+  <text x="350" y="310" class="label">Spring Boot API</text>
+  <text x="350" y="332" class="muted">JWT + RBAC</text>
+  <text x="350" y="352" class="muted">Audit logging</text>
+
+  <rect x="60" y="300" width="200" height="80" class="box" />
+  <text x="80" y="340" class="label">Clients</text>
+  <text x="80" y="362" class="muted">Questions</text>
+
+  <rect x="620" y="280" width="230" height="90" class="box" />
+  <text x="640" y="320" class="label">New Relic</text>
+  <text x="640" y="342" class="muted">Logs, metrics, traces</text>
+
+  <line x1="280" y1="165" x2="330" y2="165" class="arrow" />
+  <line x1="550" y1="165" x2="600" y2="165" class="arrow" />
+  <line x1="460" y1="210" x2="460" y2="270" class="arrow" />
+  <line x1="260" y1="340" x2="330" y2="330" class="arrow" />
+  <line x1="580" y1="325" x2="620" y2="325" class="arrow" />
+  <line x1="600" y1="210" x2="520" y2="270" class="arrow" />
+</svg>

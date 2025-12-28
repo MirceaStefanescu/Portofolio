@@ -1,0 +1,16 @@
+cloudProvider: aws
+awsRegion: us-east-1
+
+autoDiscovery:
+  clusterName: finops-eks
+
+rbac:
+  serviceAccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::<ACCOUNT_ID>:role/<CLUSTER_AUTOSCALER_ROLE>
+
+extraArgs:
+  expander: least-waste
+  balance-similar-node-groups: "true"
+  skip-nodes-with-system-pods: "false"
+  skip-nodes-with-local-storage: "false"

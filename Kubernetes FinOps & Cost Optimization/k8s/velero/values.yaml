@@ -1,0 +1,32 @@
+configuration:
+  backupStorageLocation:
+    - name: default
+      provider: aws
+      bucket: velero
+      default: true
+      accessMode: ReadWrite
+      credential:
+        name: velero-credentials
+        key: cloud
+      config:
+        region: minio
+        s3ForcePathStyle: "true"
+        s3Url: http://minio.finops.svc:9000
+  volumeSnapshotLocation:
+    - name: default
+      provider: aws
+      config:
+        region: minio
+
+credentials:
+  useSecret: true
+  existingSecret: velero-credentials
+
+snapshotsEnabled: false
+
+initContainers:
+  - name: velero-plugin-for-aws
+    image: velero/velero-plugin-for-aws:v1.13.1
+    volumeMounts:
+      - mountPath: /target
+        name: plugins

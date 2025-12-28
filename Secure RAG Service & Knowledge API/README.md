@@ -15,26 +15,34 @@ Secure retrieval-augmented generation (RAG) microservice for platform and knowle
 - Spring Security + JWT: authentication, authorization, and RBAC enforcement.
 - Qdrant (replicated across AZs): vector store for low-latency semantic retrieval and high availability.
 - LangChain4j: RAG orchestration and retrieval workflows in Java.
-- Kubernetes + Helm: repeatable, multi-cloud deployments and upgrades.
+- Kubernetes + Helm: repeatable, multi-cloud deployments and upgrades (chart in `helm/secure-rag`).
 - Velero: backup and restore for stateful vector data.
 - New Relic: traces, metrics, and logs for performance and reliability.
 
 ## Demo
 - Live: TBD
-- Video or GIF: TBD
-- Screenshots: TBD
+- Video or GIF: `demo/rag-query.svg`
+- Screenshots: `demo/rag-overview.svg`
 
 ## Quickstart (local)
 Prereqs:
 - Java 17+
 - Docker and Docker Compose
+- Python 3 (for the demo script)
 
 Run:
 ```
-# TODO: add docker-compose.yml and seed docs.
-# Expected once scaffolding exists:
-# ./gradlew bootRun
+docker compose up --build
+./scripts/demo.sh
 ```
+
+Makefile shortcuts:
+```
+make dev
+make demo
+```
+
+Local API: `http://localhost:8090`
 
 ## Architecture
 ```mermaid
@@ -57,13 +65,19 @@ Docs are ingested, chunked, embedded, and stored in a replicated vector store. T
 
 ## Tests
 ```
-# TODO: add unit and integration tests.
-# Expected once scaffolding exists:
-# ./gradlew test
+mvn -f api/pom.xml test
+```
+
+Or:
+```
+make test
 ```
 
 ## Security
-Secrets: use `.env` (see `.env.example`). JWT-based authentication and RBAC restrict access to endpoints. Audit logging records document access and inference activity. Use Kubernetes RBAC, network policies, and least-privilege service accounts for production.
+Secrets: use `.env` (see `.env.example`). JWT-based authentication and RBAC restrict access to endpoints; the dev token endpoint is gated by `X-Dev-Key` and should be disabled in production. Threat model assumes untrusted questions/documents and potential prompt injection; mitigate with RBAC, audit logs, and retrieval filtering. Use Kubernetes RBAC, network policies, and least-privilege service accounts for production.
+
+## Notes / limitations
+- Local mode uses deterministic hash-based embeddings to stay self-contained; swap in LangChain4j-backed embeddings/LLMs for production quality.
 
 ## Roadmap / tradeoffs
 - Add eval sets, prompt-injection tests, and regression metrics for RAG quality.

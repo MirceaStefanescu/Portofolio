@@ -1,0 +1,8 @@
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  name: finops-backup
+  namespace: velero
+spec:
+  includedNamespaces:
+    - finops

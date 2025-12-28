@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cpu-demo
+  namespace: finops
+  labels:
+    app: cpu-demo
+    team: finops
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cpu-demo
+  template:
+    metadata:
+      labels:
+        app: cpu-demo
+        team: finops
+    spec:
+      containers:
+        - name: cpu-demo
+          image: registry.k8s.io/hpa-example
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 200m
+            limits:
+              cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cpu-demo
+  namespace: finops
+  labels:
+    app: cpu-demo
+spec:
+  selector:
+    app: cpu-demo
+  ports:
+    - port: 80
+      targetPort: 80

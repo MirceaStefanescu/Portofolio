@@ -1,0 +1,41 @@
+server:
+  port: ${PORT:8080}
+
+spring:
+  application:
+    name: secure-rag-api
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      probes:
+        enabled: true
+
+rag:
+  chunk-size: ${RAG_CHUNK_SIZE:800}
+  chunk-overlap: ${RAG_CHUNK_OVERLAP:120}
+  top-k: ${RAG_TOP_K:4}
+  vector-size: ${RAG_VECTOR_SIZE:64}
+
+qdrant:
+  url: ${QDRANT_URL:http://localhost:6333}
+  collection: ${QDRANT_COLLECTION:rag_docs}
+  api-key: ${QDRANT_API_KEY:}
+
+security:
+  dev-api-key: ${DEV_API_KEY:dev-api-key}
+  jwt:
+    secret: ${JWT_SECRET:dev-secret-change-this-dev-secret-change-this}
+    issuer: ${JWT_ISSUER:secure-rag}
+    ttl-seconds: ${JWT_TTL_SECONDS:3600}
+
+audit:
+  max-events: ${AUDIT_MAX_EVENTS:500}
+
+logging:
+  level:
+    com.portfolio.securerag: INFO
