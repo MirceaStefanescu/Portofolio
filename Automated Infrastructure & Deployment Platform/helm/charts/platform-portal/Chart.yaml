@@ -1,0 +1,6 @@
+apiVersion: v2
+name: platform-portal
+description: Self-service portal for deployments and infrastructure provisioning
+version: 0.1.0
+appVersion: "0.1.0"
+type: application

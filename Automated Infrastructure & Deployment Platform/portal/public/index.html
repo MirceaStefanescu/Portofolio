@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Automated Infrastructure & Deployment Platform</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="hero__badge">DevOps Platform</div>
+      <h1>Automated Infrastructure & Deployment Platform</h1>
+      <p>Generate pipelines, infrastructure, and release manifests in a single flow.</p>
+    </header>
+
+    <main>
+      <section class="card reveal">
+        <h2>Pipeline generator</h2>
+        <p>Generate Jenkins or GitHub Actions pipelines with Vault-ready environment hooks.</p>
+        <div class="grid grid--two">
+          <label>
+            App name
+            <input id="appName" type="text" placeholder="orders-api" value="orders-api" />
+          </label>
+          <label>
+            Environment
+            <input id="environment" type="text" placeholder="dev" value="dev" />
+          </label>
+          <label>
+            Pipeline provider
+            <select id="provider">
+              <option value="github">GitHub Actions</option>
+              <option value="jenkins">Jenkins</option>
+            </select>
+          </label>
+          <label>
+            App count
+            <input id="appCount" type="number" min="0" max="50" value="3" />
+          </label>
+        </div>
+        <div class="actions">
+          <button id="generatePipeline" type="button">Generate pipeline</button>
+          <button id="downloadPipeline" type="button" class="secondary">Download</button>
+        </div>
+        <div class="output">
+          <div class="output__header">
+            <span>Pipeline output</span>
+            <span class="note" id="pipelineStatus">Ready</span>
+          </div>
+          <pre id="pipelineOutput">Select Generate pipeline to see the output.</pre>
+        </div>
+      </section>
+
+      <section class="card reveal delay-1">
+        <h2>Infrastructure templates</h2>
+        <p>Preview Terraform environment wiring and Helm values for the selected app.</p>
+        <div class="actions">
+          <button id="generateTerraform" type="button">Generate Terraform</button>
+          <button id="downloadTerraform" type="button" class="secondary">Download</button>
+          <button id="generateHelm" type="button">Generate Helm values</button>
+          <button id="downloadHelm" type="button" class="secondary">Download</button>
+        </div>
+        <div class="grid grid--two">
+          <div class="output">
+            <div class="output__header">
+              <span>Terraform main.tf</span>
+            </div>
+            <pre id="terraformOutput">Click Generate Terraform to preview output.</pre>
+          </div>
+          <div class="output">
+            <div class="output__header">
+              <span>Helm values.yaml</span>
+            </div>
+            <pre id="helmOutput">Click Generate Helm values to preview output.</pre>
+          </div>
+        </div>
+      </section>
+
+      <section class="card reveal delay-2">
+        <h2>Service health</h2>
+        <p>Portal checks downstream services used by the deployment platform.</p>
+        <ul class="status-list" id="serviceStatus">
+          <li class="status">
+            <span>Portal</span>
+            <span class="badge healthy">healthy</span>
+          </li>
+        </ul>
+        <p class="note">Health checks use the endpoints defined in docker-compose.</p>
+      </section>
+
+      <section class="card reveal delay-3">
+        <h2>Drift detection and rollback</h2>
+        <p>Run drift detection and rollback commands locally when connected to your cluster.</p>
+        <div class="output">
+          <div class="output__header">
+            <span>Drift check</span>
+          </div>
+          <pre>./scripts/drift-check.sh dev</pre>
+        </div>
+        <div class="output">
+          <div class="output__header">
+            <span>Rollback</span>
+          </div>
+          <pre>./scripts/rollback.sh platform-portal default</pre>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

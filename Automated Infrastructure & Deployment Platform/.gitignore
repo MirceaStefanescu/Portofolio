@@ -1,0 +1,13 @@
+.env
+.env.*
+AGENTS.md
+.terraform/
+**/terraform.tfstate
+**/terraform.tfstate.*
+*.tfvars
+node_modules/
+dist/
+build/
+*.log
+.DS_Store
+jenkins_home/
