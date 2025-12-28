@@ -2,13 +2,7 @@
 
 Cloud-native e-commerce platform for teams that need reliable product, order, and payment APIs with event-driven workflows.
 
-## Demo
-- Live: TBD
-- Video or GIF: TBD
-- Screenshots: `docs/screenshots/`
-
-## Why this exists
-Retail teams need dependable order processing at scale. This project demonstrates a production-minded microservices baseline with REST APIs, asynchronous messaging, and cloud-native operational patterns for Kubernetes on AWS.
+This project demonstrates a production-minded microservices baseline with REST APIs, async messaging, and Kubernetes-ready operational patterns.
 
 ## Features
 - Product, order, and payment REST APIs with independent data stores
@@ -16,8 +10,56 @@ Retail teams need dependable order processing at scale. This project demonstrate
 - Kafka event streams for order and payment events
 - Docker Compose for one-command local run
 - Kubernetes manifests for deployments and services
-- Jenkins CI pipeline and Terraform IaC scaffold for AWS
 - Prometheus metrics and optional Grafana/Kibana observability stack
+
+## Tech stack (and why)
+- Backend: Python FastAPI for fast iteration and clean RESTful APIs.
+- Messaging: RabbitMQ for command queues, Kafka for durable event streams.
+- Infra: Docker Compose for local dev; Kubernetes manifests for deployment.
+- CI: Jenkins pipeline for lint, test, build, and container publishing.
+- IaC: Terraform scaffold for AWS EKS baseline.
+- Observability: Prometheus + Grafana for metrics; Elasticsearch + Kibana for logs.
+
+## Demo
+- Live: TBD
+- Video or GIF: TBD
+- Screenshots: `docs/screenshots/`
+
+## Quickstart (local)
+Prereqs:
+- Docker and Docker Compose
+
+Run:
+```
+make dev
+```
+
+Create a product:
+```
+curl -X POST http://localhost:8010/products \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Coffee Beans","description":"1kg bag","price_cents":1899,"currency":"USD"}'
+```
+
+Create an order:
+```
+curl -X POST http://localhost:8020/orders \
+  -H "Content-Type: application/json" \
+  -d '{"customer_id":"cust-123","items":[{"product_id":"<PRODUCT_ID>","quantity":2}]}'
+```
+
+Check order status:
+```
+curl http://localhost:8020/orders/<ORDER_ID>
+```
+
+RabbitMQ UI:
+- http://localhost:15672 (guest / guest)
+
+Optional observability stack:
+```
+docker compose -f docker-compose.yml -f docker-compose.observability.yml up --build
+```
 
 ## Architecture
 ```mermaid
@@ -56,66 +98,23 @@ flowchart LR
 
 Data flow: orders are created via REST, the order service publishes a payment request to RabbitMQ, the payment service processes the request, emits a payment event to Kafka, and the order service consumes that event to update order status.
 
-## Tech stack
-- Backend: Python FastAPI for fast iteration and clean RESTful APIs.
-- Messaging: RabbitMQ for command queues, Kafka for durable event streams.
-- Infra: Docker Compose for local dev; Kubernetes manifests for deployment.
-- CI: Jenkins pipeline for lint, test, build, and container publishing.
-- Observability: Prometheus + Grafana for metrics; Elasticsearch + Kibana for logs.
-
-## Quickstart (local)
-Prereqs:
-- Docker and Docker Compose
-
-Run:
-```
-make dev
-```
-
-Create a product:
-```
-curl -X POST http://localhost:8010/products \
-  -H "Content-Type: application/json" \
-  -d '{"name":"Coffee Beans","description":"1kg bag","price_cents":1899,"currency":"USD"}'
-```
-
-Create an order:
-```
-curl -X POST http://localhost:8020/orders \
-  -H "Content-Type: application/json" \
-  -d '{"customer_id":"cust-123","items":[{"product_id":"<PRODUCT_ID>","quantity":2}]}'
-```
-
-Check order status:
-```
-curl http://localhost:8020/orders/<ORDER_ID>
-```
-
-RabbitMQ UI:
-- http://localhost:15672 (guest / guest)
-
-Optional observability stack:
-```
-docker compose -f docker-compose.yml -f docker-compose.observability.yml up --build
-```
-
 ## Tests
 ```
 make test
 ```
 
 ## Security
-Secrets: use `.env` (see `.env.example`). No secrets are committed. For production: enable auth (OAuth/JWT), use TLS for RabbitMQ/Kafka, restrict topics/queues, and apply network policies. Enable secret scanning and Dependabot in GitHub.
-
-## Notes / limitations
-- Local demo uses SQLite for simplicity; swap for managed databases (RDS/Aurora) in production.
-- Observability stack is optional; Kibana requires a log shipper (see `monitoring/filebeat/`).
+Secrets: use `.env` (see `.env.example`). No secrets are committed. For production: enable auth (OAuth/JWT), use TLS for RabbitMQ/Kafka, restrict topics/queues, and apply network policies. This demo assumes a trusted internal network and does not include rate limiting or WAF rules.
 
 ## Roadmap / tradeoffs
 - Add API gateway with auth and rate limits.
 - Introduce saga orchestration and idempotent payment retries.
 - Replace local SQLite with per-service PostgreSQL.
 - Tradeoff: keeping services lightweight makes local runs easy but omits advanced resilience patterns.
+
+## Notes / limitations
+- Local demo uses SQLite for simplicity; swap for managed databases (RDS/Aurora) in production.
+- Observability stack is optional; Kibana requires a log shipper (see `monitoring/filebeat/`).
 
 ## Decisions and rationale
 - Split by business capability to keep services independently deployable.
