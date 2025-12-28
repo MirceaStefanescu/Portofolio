@@ -6,6 +6,7 @@ target/
 .env
 .env.*
 *.log
+!.env.example
 
 ### STS ###
 .apt_generated
