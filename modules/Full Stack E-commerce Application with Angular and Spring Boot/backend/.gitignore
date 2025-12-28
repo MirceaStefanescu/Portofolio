@@ -1,0 +1,8 @@
+target/
+build/
+out/
+*.log
+.env
+.env.*
+.idea/
+*.iml
