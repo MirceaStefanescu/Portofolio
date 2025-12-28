@@ -1,0 +1,39 @@
+<section class="orders">
+  <header>
+    <h2>Your orders</h2>
+    <p>Track payment status and order totals.</p>
+  </header>
+
+  <ng-container *ngIf="orders$ | async as orders">
+    <div class="list" *ngIf="orders.length; else empty">
+      <article class="order" *ngFor="let order of orders">
+        <div class="meta">
+          <div>
+            <h3>Order #{{ order.id }}</h3>
+            <p>{{ order.createdAt | date:'medium' }}</p>
+          </div>
+          <span class="status" [class.paid]="order.status === 'PAID'">
+            {{ order.status }}
+          </span>
+        </div>
+        <ul>
+          <li *ngFor="let item of order.items">
+            <span>{{ item.name }} × {{ item.quantity }}</span>
+            <span>{{ item.unitPrice * item.quantity | currency:'USD' }}</span>
+          </li>
+        </ul>
+        <div class="total">
+          <strong>Total</strong>
+          <span>{{ order.totalAmount | currency:'USD' }}</span>
+        </div>
+      </article>
+    </div>
+  </ng-container>
+
+  <ng-template #empty>
+    <div class="empty">
+      <h3>No orders yet</h3>
+      <p>Complete a checkout to see your orders here.</p>
+    </div>
+  </ng-template>
+</section>

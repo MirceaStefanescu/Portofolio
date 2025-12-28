@@ -1,0 +1,45 @@
+<section class="checkout">
+  <header>
+    <h2>Checkout</h2>
+    <p>Complete your payment securely via Stripe.</p>
+  </header>
+
+  <ng-container *ngIf="!fatalError(); else errorState">
+    <div class="content">
+      <div class="summary">
+        <h3>Order summary</h3>
+        <ul>
+          <li *ngFor="let item of items()">
+            <span>{{ item.product.name }} × {{ item.quantity }}</span>
+            <span>{{ item.product.price * item.quantity | currency:'USD' }}</span>
+          </li>
+        </ul>
+        <div class="total">
+          <strong>Total</strong>
+          <span>{{ total() | currency:'USD' }}</span>
+        </div>
+      </div>
+
+      <div class="payment">
+        <h3>Payment details</h3>
+        <div class="card-element" id="card-element"></div>
+        <button
+          (click)="pay()"
+          [disabled]="status() !== 'ready'"
+        >
+          {{ status() === 'processing' ? 'Processing...' : 'Pay now' }}
+        </button>
+        <p class="success" *ngIf="status() === 'success'">Payment complete. Thank you.</p>
+        <p class="error" *ngIf="status() === 'error'">{{ errorMessage() }}</p>
+      </div>
+    </div>
+  </ng-container>
+
+  <ng-template #errorState>
+    <div class="empty">
+      <h3>Checkout unavailable</h3>
+      <p>{{ errorMessage() }}</p>
+      <a routerLink="/cart">Return to cart</a>
+    </div>
+  </ng-template>
+</section>

@@ -1,0 +1,84 @@
+.orders {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.orders header h2 {
+  margin: 0 0 0.4rem;
+}
+
+.orders header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.list {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.order {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+.meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.meta h3 {
+  margin: 0 0 0.3rem;
+}
+
+.meta p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.status {
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.status.paid {
+  background: #d8f2e0;
+  color: #2f7d4a;
+}
+
+.order ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.6rem;
+  color: var(--muted);
+}
+
+.order li {
+  display: flex;
+  justify-content: space-between;
+}
+
+.total {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1rem;
+  font-size: 1.05rem;
+}
+
+.empty {
+  border: 1px dashed var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  text-align: center;
+  color: var(--muted);
+}
