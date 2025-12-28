@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#f8fafc" />
+  <rect x="80" y="80" width="1120" height="560" fill="#ffffff" stroke="#e2e8f0" stroke-width="2" rx="16" />
+  <text x="120" y="160" font-family="Verdana, Arial, sans-serif" font-size="36" fill="#0f172a">Progressive Delivery</text>
+  <text x="120" y="210" font-family="Verdana, Arial, sans-serif" font-size="22" fill="#475569">Canary and Blue/Green placeholder</text>
+  <rect x="120" y="260" width="500" height="140" fill="#dcfce7" stroke="#86efac" rx="12" />
+  <rect x="660" y="260" width="500" height="140" fill="#fee2e2" stroke="#fca5a5" rx="12" />
+  <text x="160" y="320" font-family="Verdana, Arial, sans-serif" font-size="20" fill="#166534">Canary 20% -> 50% -> 100%</text>
+  <text x="700" y="320" font-family="Verdana, Arial, sans-serif" font-size="20" fill="#991b1b">Blue/Green Preview</text>
+  <rect x="120" y="430" width="1040" height="80" fill="#e0f2fe" stroke="#7dd3fc" rx="12" />
+  <text x="160" y="480" font-family="Verdana, Arial, sans-serif" font-size="20" fill="#0c4a6e">Argo Rollouts dashboard view</text>
+  <text x="120" y="560" font-family="Verdana, Arial, sans-serif" font-size="18" fill="#64748b">Replace with real rollout screenshots</text>
+</svg>

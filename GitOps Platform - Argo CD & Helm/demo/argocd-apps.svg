@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <rect width="1280" height="720" fill="#f2f4f8" />
+  <rect x="80" y="80" width="1120" height="560" fill="#ffffff" stroke="#d0d7de" stroke-width="2" rx="16" />
+  <text x="120" y="160" font-family="Verdana, Arial, sans-serif" font-size="36" fill="#111827">Argo CD Applications</text>
+  <text x="120" y="210" font-family="Verdana, Arial, sans-serif" font-size="22" fill="#4b5563">Placeholder screenshot</text>
+  <rect x="120" y="260" width="1040" height="60" fill="#eef2ff" stroke="#c7d2fe" rx="10" />
+  <rect x="120" y="340" width="1040" height="60" fill="#ecfeff" stroke="#a5f3fc" rx="10" />
+  <rect x="120" y="420" width="1040" height="60" fill="#fef3c7" stroke="#fcd34d" rx="10" />
+  <text x="150" y="300" font-family="Verdana, Arial, sans-serif" font-size="20" fill="#1f2937">platform-dev</text>
+  <text x="150" y="380" font-family="Verdana, Arial, sans-serif" font-size="20" fill="#1f2937">platform-staging</text>
+  <text x="150" y="460" font-family="Verdana, Arial, sans-serif" font-size="20" fill="#1f2937">platform-prod</text>
+  <text x="120" y="560" font-family="Verdana, Arial, sans-serif" font-size="18" fill="#6b7280">Replace with real Argo CD screenshots</text>
+</svg>

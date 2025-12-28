@@ -28,13 +28,13 @@ kind-up:
 argocd:
 	helm repo add argo https://argoproj.github.io/argo-helm
 	helm repo update
-	helm upgrade --install argocd argo/argo-cd -n $(ARGOCD_NAMESPACE) --create-namespace
+	helm upgrade --install argocd argo/argo-cd -n $(ARGOCD_NAMESPACE) --create-namespace -f infra/argocd/values.yaml
 	kubectl -n $(ARGOCD_NAMESPACE) rollout status deploy/argocd-server --timeout=180s
 
 rollouts:
 	helm repo add argo https://argoproj.github.io/argo-helm
 	helm repo update
-	helm upgrade --install argo-rollouts argo/argo-rollouts -n $(ROLLOUTS_NAMESPACE) --create-namespace
+	helm upgrade --install argo-rollouts argo/argo-rollouts -n $(ROLLOUTS_NAMESPACE) --create-namespace -f infra/rollouts/values.yaml
 	kubectl -n $(ROLLOUTS_NAMESPACE) rollout status deploy/argo-rollouts --timeout=180s
 
 minio:

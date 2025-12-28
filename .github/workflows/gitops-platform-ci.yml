@@ -1,0 +1,33 @@
+name: GitOps Platform CI
+
+on:
+  push:
+    paths:
+      - 'GitOps Platform - Argo CD & Helm/**'
+      - '.github/workflows/gitops-platform-ci.yml'
+  pull_request:
+    paths:
+      - 'GitOps Platform - Argo CD & Helm/**'
+      - '.github/workflows/gitops-platform-ci.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: "GitOps Platform - Argo CD & Helm"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Run checks
+        run: make test

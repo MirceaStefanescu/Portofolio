@@ -4,6 +4,7 @@ coverage/
 .env
 .env.*
 .DS_Store
+deploy/
 .terraform/
 .terraform.lock.hcl
 terraform.tfstate

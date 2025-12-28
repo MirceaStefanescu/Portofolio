@@ -4,8 +4,8 @@ Automated CI/CD pipeline template for regulated teams that need SBOMs, signed ar
 
 ## Demo
 - Live: TBD
-- Video or GIF: TBD
-- Screenshots: TBD
+- Video or GIF: `demo/pipeline-architecture.svg`
+- Screenshots: `demo/pipeline-artifacts.svg`
 
 ## Why this exists
 Supply chain risk and compliance requirements make it hard to ship quickly without compromising auditability. This project standardizes SBOM generation, dependency and container scanning, artifact signing, and policy gates so teams can produce repeatable, verifiable releases across multi-cloud environments.
@@ -102,6 +102,7 @@ Secrets: use `.env` for local Cosign keys, prefer KMS or keyless OIDC in CI, kee
 
 ## Project structure
 - `app/`: demo container image used by the pipeline.
+- `demo/`: pipeline architecture and artifact replication visuals.
 - `scripts/pipeline.sh`: local end-to-end pipeline runner.
 - `policy/provenance.json`: sample SLSA-style provenance predicate.
 - `ci/github-actions/pipeline.yml`: GitHub Actions pipeline template.

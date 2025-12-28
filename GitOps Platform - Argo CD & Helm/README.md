@@ -13,7 +13,7 @@ GitOps delivery platform for platform engineers and SREs who need repeatable, au
 ## Tech stack (and why)
 - Argo CD: GitOps reconciliation, drift detection, and audit trails.
 - Helm: templated manifests and per-environment configuration.
-- GitHub Actions: promotion automation and policy gates.
+- GitHub Actions: promotion automation plus CI checks for Helm and Terraform.
 - Terraform: consistent multi-cloud provisioning for Kubernetes clusters.
 - Kubernetes (EKS/AKS/GKE): managed clusters across dev/staging/prod.
 - Argo Rollouts: canary and blue/green deployments with rollback controls.
@@ -22,8 +22,8 @@ GitOps delivery platform for platform engineers and SREs who need repeatable, au
 
 ## Demo
 - Live: TBD
-- Video or GIF: TBD
-- Screenshots: TBD
+- Video or GIF: `demo/gitops-promotion.gif`
+- Screenshots: `demo/argocd-apps.svg`, `demo/rollout-strategy.svg`
 
 ## Quickstart (local)
 Prereqs:
@@ -38,6 +38,8 @@ Run:
 ```
 make dev
 ```
+This creates a local kind cluster, installs Argo CD, Argo Rollouts, MinIO, and Velero, then bootstraps the app-of-apps.
+Helm overrides for the local stack live in `infra/`.
 
 Argo CD access:
 ```
@@ -49,14 +51,16 @@ Promote an image tag:
 ```
 make promote ENV=staging TAG=6.5.4 STRATEGY=blueGreen
 ```
+GitHub Actions promotion: `.github/workflows/gitops-platform-promote.yml`.
 
 Back up environments:
 ```
 make backup
 ```
 
+Cloud provisioning: see `terraform/README.md` for EKS, AKS, and GKE provisioning.
+
 Note: the Argo CD manifests currently point to the portfolio repo and the `GitOps Platform - Argo CD & Helm` subfolder. Update the `repoURL` and `path` in `apps/bootstrap/app-of-apps.yaml` and `apps/environments/*.yaml` to match your mirrored repo before running Argo CD, then push so Argo CD can pull it.
-```
 
 ## Architecture
 ```mermaid
@@ -99,6 +103,7 @@ Helm charts and environment-specific values live in Git. GitHub Actions promotes
 ```
 make test
 ```
+CI runs the same checks; see `.github/workflows/gitops-platform-ci.yml`.
 
 ## Security
 Secrets: use `.env` (see `.env.example`). Store cloud credentials in OIDC-backed GitHub Actions secrets, restrict Argo CD access with RBAC, and enable namespace isolation plus network policies between environments. Velero backups should use encrypted buckets and least-privilege IAM roles. Enable secret scanning and Dependabot in GitHub.
@@ -108,6 +113,17 @@ Secrets: use `.env` (see `.env.example`). Store cloud credentials in OIDC-backed
 - Add promotion metrics and deployment DORA dashboards.
 - Add automated verification gates for canary analysis.
 - Tradeoff: multi-cloud parity improves resilience but increases operational overhead.
+
+## Project structure
+- `apps/`: Argo CD app-of-apps and per-environment Applications.
+- `charts/`: Helm chart with environment overrides.
+- `demo/`: placeholder demo assets (screenshots and GIF).
+- `infra/`: Helm values for Argo CD and Argo Rollouts.
+- `k8s/`: MinIO and Velero values plus backup manifest.
+- `terraform/`: AWS, Azure, and GCP cluster baselines.
+- `scripts/`: promotion helper used by GitHub Actions.
+- `.github/workflows`: monorepo CI and promotion workflows for this project.
+- `GitOps Platform - Argo CD & Helm/.github/workflows`: standalone workflows for a split repo.
 
 ## Tags
 terraform, kubernetes, ci/cd, helm, argo cd, gitops, velero, multi-env

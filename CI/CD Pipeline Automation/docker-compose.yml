@@ -7,6 +7,7 @@ services:
       RELEASE_COLOR: blue
       BUILD_ID: local
       GIT_SHA: dev
+      DEPLOY_MODE: blue-green
     ports:
       - "8080:8080"
 

@@ -9,12 +9,12 @@
 Kafka (Bitnami):
 ```
 helm repo add bitnami https://charts.bitnami.com/bitnami
-helm install kafka bitnami/kafka --set replicaCount=1 --set kraft.enabled=true
+helm install kafka bitnami/kafka --set replicaCount=1 --set kraft.enabled=true -n cloud-native-ecommerce --create-namespace
 ```
 
 RabbitMQ (Bitnami):
 ```
-helm install rabbitmq bitnami/rabbitmq --set auth.username=guest --set auth.password=guest
+helm install rabbitmq bitnami/rabbitmq --set auth.username=guest --set auth.password=guest -n cloud-native-ecommerce
 ```
 
 ## Deploy services

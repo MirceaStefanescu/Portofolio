@@ -14,7 +14,7 @@ resource "kubernetes_namespace" "app" {
 resource "kubernetes_config_map" "env" {
   metadata {
     name      = "${var.app_name}-env"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.app.metadata[0].name
     labels    = local.common_labels
   }
 
@@ -31,7 +31,7 @@ resource "kubernetes_deployment" "blue" {
 
   metadata {
     name      = "${var.app_name}-blue"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.app.metadata[0].name
     labels    = merge(local.common_labels, { color = "blue" })
   }
 
@@ -99,7 +99,7 @@ resource "kubernetes_deployment" "green" {
 
   metadata {
     name      = "${var.app_name}-green"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.app.metadata[0].name
     labels    = merge(local.common_labels, { color = "green" })
   }
 
@@ -167,7 +167,7 @@ resource "kubernetes_deployment" "rolling" {
 
   metadata {
     name      = "${var.app_name}-rolling"
-    namespace = var.namespace
+    namespace = kubernetes_namespace.app.metadata[0].name
     labels    = merge(local.common_labels, { track = "stable" })
   }
 
@@ -244,7 +244,7 @@ resource "kubernetes_service" "blue_green" {
 
   metadata {
     name      = var.app_name
-    namespace = var.namespace
+    namespace = kubernetes_namespace.app.metadata[0].name
     labels    = local.common_labels
   }
 
@@ -266,7 +266,7 @@ resource "kubernetes_service" "rolling" {
 
   metadata {
     name      = var.app_name
-    namespace = var.namespace
+    namespace = kubernetes_namespace.app.metadata[0].name
     labels    = local.common_labels
   }
 

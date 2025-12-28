@@ -11,7 +11,7 @@ terraform {
 
 provider "kubernetes" {
   config_path    = pathexpand(var.kubeconfig)
-  config_context = var.kube_context
+  config_context = var.kube_context != "" ? var.kube_context : null
 }
 
 module "app" {

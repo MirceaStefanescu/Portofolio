@@ -7,6 +7,8 @@ cd "$ROOT_DIR"
 IMAGE_NAME="${IMAGE_NAME:-cicd-demo}"
 IMAGE_TAG="${IMAGE_TAG:-local}"
 FULL_IMAGE="${IMAGE_NAME}:${IMAGE_TAG}"
+TF_ENV="${TF_ENV:-local-kind}"
+TF_DIR="terraform/environments/${TF_ENV}"
 
 echo "Installing dependencies"
 npm install
@@ -22,8 +24,8 @@ docker build -t "${FULL_IMAGE}" .
 
 if [[ "${RUN_TERRAFORM:-false}" == "true" ]]; then
   echo "Running Terraform apply"
-  terraform -chdir=terraform/environments/local-kind init -input=false
-  terraform -chdir=terraform/environments/local-kind apply -auto-approve \
+  terraform -chdir="${TF_DIR}" init -input=false
+  terraform -chdir="${TF_DIR}" apply -auto-approve \
     -var="image=${FULL_IMAGE}" \
     -var="deploy_mode=${DEPLOY_MODE:-blue-green}" \
     -var="release_color=${RELEASE_COLOR:-blue}" \
@@ -34,7 +36,7 @@ fi
 
 if [[ "${RUN_ANSIBLE:-false}" == "true" ]]; then
   echo "Running Ansible configuration"
-  ansible-playbook ansible/playbooks/configure-app.yml \
+  ansible-playbook -i ansible/inventory/local.ini ansible/playbooks/configure-app.yml \
     -e "environment=${ENVIRONMENT:-dev}" \
     -e "release_color=${RELEASE_COLOR:-blue}" \
     -e "build_id=${IMAGE_TAG}" \
