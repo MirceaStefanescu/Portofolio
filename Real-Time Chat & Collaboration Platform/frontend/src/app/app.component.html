@@ -1,0 +1,79 @@
+<div class="app-shell">
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-title">Realtime Chat</div>
+      <div class="brand-subtitle">Spring Boot, Kafka, Angular</div>
+    </div>
+    <div class="status">
+      <span class="indicator" [class.online]="connected"></span>
+      <span class="status-text">{{ connected ? "Connected" : "Connecting" }}</span>
+    </div>
+    <div class="actions">
+      <span class="user" *ngIf="user">Hello, {{ user.displayName || user.username }}</span>
+      <button *ngIf="!user" (click)="login()">Login with GitHub</button>
+      <button *ngIf="user" (click)="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <aside class="rooms-panel">
+      <div class="panel-header">
+        <h2>Rooms</h2>
+        <p>Create or join a topic.</p>
+      </div>
+      <div class="room-create">
+        <input
+          type="text"
+          placeholder="New room name"
+          [(ngModel)]="newRoomName"
+        />
+        <button (click)="createRoom()">Create</button>
+      </div>
+      <ul class="room-list">
+        <li
+          *ngFor="let room of rooms"
+          (click)="selectRoom(room)"
+          [class.active]="room.id === selectedRoom?.id"
+        >
+          <span class="room-name">{{ room.name }}</span>
+          <span class="room-meta">{{ room.createdAt | date: "shortDate" }}</span>
+        </li>
+      </ul>
+    </aside>
+
+    <section class="chat-panel">
+      <div class="chat-header">
+        <h2>{{ selectedRoom?.name || "Select a room" }}</h2>
+        <span class="chat-hint">Messages are persisted and streamed via Kafka.</span>
+      </div>
+
+      <div class="messages" *ngIf="selectedRoom; else emptyState">
+        <div class="message" *ngFor="let message of messages">
+          <div class="message-meta">
+            <span class="sender">{{ message.sender }}</span>
+            <span class="time">{{ message.createdAt | date: "shortTime" }}</span>
+          </div>
+          <div class="bubble">{{ message.content }}</div>
+        </div>
+      </div>
+
+      <ng-template #emptyState>
+        <div class="empty-state">
+          <div class="empty-title">Start collaborating</div>
+          <p>Select a room to load the timeline.</p>
+        </div>
+      </ng-template>
+
+      <form class="composer" (ngSubmit)="sendMessage()">
+        <input
+          name="message"
+          type="text"
+          [disabled]="!selectedRoom"
+          [(ngModel)]="newMessage"
+          placeholder="Type a message and hit enter"
+        />
+        <button type="submit" [disabled]="!selectedRoom || !newMessage.trim()">Send</button>
+      </form>
+    </section>
+  </main>
+</div>
