@@ -21,9 +21,14 @@ GitOps delivery platform for platform engineers and SREs who need repeatable, au
 - Docker: consistent build/runtime for CI jobs and tooling.
 
 ## Demo
-- Live: TBD
-- Video or GIF: `demo/gitops-promotion.gif`
-- Screenshots: `demo/argocd-apps.svg`, `demo/rollout-strategy.svg`
+Live: TBD
+
+Video or GIF:
+![GitOps promotion flow](demo/gitops-promotion.gif)
+
+Screenshots:
+![Argo CD applications](demo/argocd-apps.svg)
+![Rollout strategy](demo/rollout-strategy.svg)
 
 ## Quickstart (local)
 Prereqs:
