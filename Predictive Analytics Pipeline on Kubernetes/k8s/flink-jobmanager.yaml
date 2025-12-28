@@ -13,6 +13,9 @@ spec:
     - name: rpc
       port: 6123
       targetPort: 6123
+    - name: blob
+      port: 6124
+      targetPort: 6124
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -36,6 +39,7 @@ spec:
           ports:
             - containerPort: 8081
             - containerPort: 6123
+            - containerPort: 6124
           env:
             - name: FLINK_PROPERTIES
               value: |
