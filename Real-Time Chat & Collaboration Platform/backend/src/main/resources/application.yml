@@ -24,7 +24,7 @@ spring:
     listener:
       missing-topics-fatal: false
     consumer:
-      group-id: realtime-chat
+      group-id: ${KAFKA_CONSUMER_GROUP:realtime-chat-${HOSTNAME:local}}
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer

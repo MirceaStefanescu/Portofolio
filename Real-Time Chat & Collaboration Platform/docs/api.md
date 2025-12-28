@@ -1,6 +1,7 @@
 # API
 
 ## REST Endpoints
+- All endpoints require OAuth2 login unless stated otherwise.
 - `GET /api/me`
   - Returns the authenticated user profile.
 - `GET /api/rooms`

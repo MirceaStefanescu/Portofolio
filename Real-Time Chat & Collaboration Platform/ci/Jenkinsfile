@@ -1,0 +1,70 @@
+pipeline {
+  agent any
+
+  environment {
+    PROJECT_DIR = 'Real-Time Chat & Collaboration Platform'
+    REGISTRY = ''
+    IMAGE_TAG = "${env.BUILD_NUMBER}"
+  }
+
+  stages {
+    stage('Build Backend') {
+      steps {
+        dir("${PROJECT_DIR}/backend") {
+          sh 'mvn -B -DskipTests package'
+        }
+      }
+    }
+
+    stage('Build Frontend') {
+      steps {
+        dir("${PROJECT_DIR}/frontend") {
+          sh 'npm install'
+          sh 'npm run build'
+        }
+      }
+    }
+
+    stage('Docker Build') {
+      steps {
+        script {
+          def registryPrefix = env.REGISTRY?.trim() ? "${REGISTRY}/" : ""
+          def backendImage = "${registryPrefix}realtime-chat-backend:${IMAGE_TAG}"
+          def frontendImage = "${registryPrefix}realtime-chat-frontend:${IMAGE_TAG}"
+
+          sh "docker build -t ${backendImage} ${PROJECT_DIR}/backend"
+          sh "docker build -t ${frontendImage} ${PROJECT_DIR}/frontend"
+        }
+      }
+    }
+
+    stage('Docker Push') {
+      when {
+        expression { return env.REGISTRY?.trim() }
+      }
+      steps {
+        script {
+          def backendImage = "${REGISTRY}/realtime-chat-backend:${IMAGE_TAG}"
+          def frontendImage = "${REGISTRY}/realtime-chat-frontend:${IMAGE_TAG}"
+
+          sh "docker push ${backendImage}"
+          sh "docker push ${frontendImage}"
+        }
+      }
+    }
+
+    stage('Terraform Deploy') {
+      when {
+        expression { return env.DEPLOY?.trim() == 'true' && env.REGISTRY?.trim() }
+      }
+      steps {
+        dir("${PROJECT_DIR}/infra/terraform") {
+          sh 'terraform init'
+          sh "terraform apply -auto-approve \
+            -var backend_image=${REGISTRY}/realtime-chat-backend:${IMAGE_TAG} \
+            -var frontend_image=${REGISTRY}/realtime-chat-frontend:${IMAGE_TAG}"
+        }
+      }
+    }
+  }
+}

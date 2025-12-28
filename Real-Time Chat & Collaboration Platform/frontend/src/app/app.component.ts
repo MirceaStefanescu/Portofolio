@@ -50,10 +50,15 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   refreshRooms(): void {
-    this.chatService.listRooms().subscribe((rooms) => {
-      this.rooms = rooms;
-      if (!this.selectedRoom && rooms.length > 0) {
-        this.selectRoom(rooms[0]);
+    this.chatService.listRooms().subscribe({
+      next: (rooms) => {
+        this.rooms = rooms;
+        if (!this.selectedRoom && rooms.length > 0) {
+          this.selectRoom(rooms[0]);
+        }
+      },
+      error: () => {
+        this.rooms = [];
       }
     });
   }
@@ -62,8 +67,13 @@ export class AppComponent implements OnInit, OnDestroy {
     this.selectedRoom = room;
     this.messages = [];
     this.chatService.subscribeToRoom(room.id);
-    this.chatService.getMessages(room.id).subscribe((messages) => {
-      this.messages = messages;
+    this.chatService.getMessages(room.id).subscribe({
+      next: (messages) => {
+        this.messages = messages;
+      },
+      error: () => {
+        this.messages = [];
+      }
     });
   }
 
@@ -73,10 +83,12 @@ export class AppComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.chatService.createRoom(name).subscribe((room) => {
-      this.newRoomName = "";
-      this.rooms = [...this.rooms, room];
-      this.selectRoom(room);
+    this.chatService.createRoom(name).subscribe({
+      next: (room) => {
+        this.newRoomName = "";
+        this.rooms = [...this.rooms, room];
+        this.selectRoom(room);
+      }
     });
   }
 
