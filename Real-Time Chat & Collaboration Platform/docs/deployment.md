@@ -3,8 +3,8 @@
 ## Docker Compose (Local)
 1. Copy `.env.example` to `.env` in the project root.
 2. Run: `docker compose -f infra/docker-compose.yml up --build`
-3. Frontend: `http://localhost:4200`
-4. Backend: `http://localhost:8080`
+3. Frontend: `http://localhost:4201`
+4. Backend: `http://localhost:8081`
 
 ## Environment Variables
 - `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` for PostgreSQL.
@@ -15,6 +15,7 @@
 
 `.env` is local-only and should not be committed; use `.env.example` as the template.
 OAuth credentials are required for the UI to access protected APIs.
+For Docker Compose, set the GitHub OAuth callback to `http://localhost:4201/login/oauth2/code/github`.
 
 ## Kubernetes via Terraform
 1. Build and push images for `backend` and `frontend`.

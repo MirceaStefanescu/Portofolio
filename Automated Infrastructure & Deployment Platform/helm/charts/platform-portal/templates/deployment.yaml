@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: {{ include "platform-portal.fullname" . }}
   labels:
-    {{- include "platform-portal.labels" . | nindent 4 }}
+    {{ include "platform-portal.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       labels:
-        {{- include "platform-portal.labels" . | nindent 8 }}
+        {{ include "platform-portal.labels" . | nindent 8 }}
     spec:
       containers:
         - name: portal
@@ -22,9 +22,9 @@ spec:
           ports:
             - containerPort: {{ .Values.containerPort }}
           env:
-            {{- toYaml .Values.env | nindent 12 }}
+            {{ toYaml .Values.env | nindent 12 }}
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+            {{ toYaml .Values.resources | nindent 12 }}
           readinessProbe:
             httpGet:
               path: /api/health

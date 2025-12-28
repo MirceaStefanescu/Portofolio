@@ -3,7 +3,7 @@ kind: Service
 metadata:
   name: {{ include "platform-portal.fullname" . }}
   labels:
-    {{- include "platform-portal.labels" . | nindent 4 }}
+    {{ include "platform-portal.labels" . | nindent 4 }}
 spec:
   type: {{ .Values.service.type }}
   ports:

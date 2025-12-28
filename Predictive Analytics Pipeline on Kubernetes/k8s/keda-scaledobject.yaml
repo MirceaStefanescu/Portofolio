@@ -1,0 +1,19 @@
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: flink-taskmanager-scaler
+  namespace: predictive-analytics
+spec:
+  scaleTargetRef:
+    name: flink-taskmanager
+  pollingInterval: 30
+  cooldownPeriod: 120
+  minReplicaCount: 1
+  maxReplicaCount: 6
+  triggers:
+    - type: kafka
+      metadata:
+        bootstrapServers: kafka:9092
+        topic: events
+        consumerGroup: predictive-analytics
+        lagThreshold: "5"

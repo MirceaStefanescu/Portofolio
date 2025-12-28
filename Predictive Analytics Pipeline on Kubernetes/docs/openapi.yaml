@@ -1,0 +1,129 @@
+openapi: 3.0.3
+info:
+  title: Predictive Analytics API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8082
+    description: Local docker-compose
+paths:
+  /api/health:
+    get:
+      summary: Health check
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+  /api/events:
+    post:
+      summary: Publish an event to Kafka
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EventRequest"
+      responses:
+        "202":
+          description: Accepted
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+  /api/predictions:
+    get:
+      summary: List latest predictions
+      parameters:
+        - name: eventType
+          in: query
+          description: Optional filter by event type
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Max number of rows
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 200
+      responses:
+        "200":
+          description: Prediction list
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PredictionResponse"
+  /api/predictions/search:
+    get:
+      summary: Search predictions in Elasticsearch
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 200
+      responses:
+        "200":
+          description: Elasticsearch response
+          content:
+            application/json:
+              schema:
+                type: object
+components:
+  schemas:
+    EventRequest:
+      type: object
+      required:
+        - eventType
+      properties:
+        eventType:
+          type: string
+        value:
+          type: number
+          format: double
+        timestamp:
+          type: string
+          format: date-time
+          description: Optional ISO-8601 timestamp
+    PredictionResponse:
+      type: object
+      properties:
+        eventType:
+          type: string
+        windowStart:
+          type: string
+          format: date-time
+        windowEnd:
+          type: string
+          format: date-time
+        eventCount:
+          type: integer
+          format: int64
+        avgValue:
+          type: number
+          format: double
+        predictionScore:
+          type: number
+          format: double
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string

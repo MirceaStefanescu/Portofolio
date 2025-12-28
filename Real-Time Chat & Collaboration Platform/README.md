@@ -19,9 +19,9 @@ Developed a real-time chat and collaboration platform using Spring Boot with Web
 
 ## Quick Start (Docker)
 1. Copy `.env.example` to `.env` and set OAuth2 credentials.
-2. Ensure the GitHub OAuth callback is `http://localhost:8080/login/oauth2/code/github`.
+2. Ensure the GitHub OAuth callback is `http://localhost:4201/login/oauth2/code/github`.
 3. Run `docker compose -f infra/docker-compose.yml up --build`.
-4. Open `http://localhost:4200` and sign in with GitHub.
+4. Open `http://localhost:4201` and sign in with GitHub (backend is on `http://localhost:8081`).
 
 ## Local Development
 - Backend: `cd backend` then `mvn spring-boot:run`
@@ -29,14 +29,15 @@ Developed a real-time chat and collaboration platform using Spring Boot with Web
 - Infrastructure: `docker compose -f infra/docker-compose.yml up -d postgres kafka`
 
 ## OAuth2
-- Create a GitHub OAuth app with callback URL `http://localhost:8080/login/oauth2/code/github`.
+- Create a GitHub OAuth app with callback URL `http://localhost:4201/login/oauth2/code/github` for Docker Compose.
+- For local dev (backend only), use `http://localhost:8080/login/oauth2/code/github`.
 - Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in `.env` or your shell.
 - REST and WebSocket features require an authenticated session.
 
 ## Observability
 - Prometheus: `http://localhost:9090`
 - Grafana: `http://localhost:3000` (default `admin` / `admin`)
-- Backend metrics: `http://localhost:8080/actuator/prometheus`
+- Backend metrics: `http://localhost:8081/actuator/prometheus` (Docker Compose) or `http://localhost:8080/actuator/prometheus` (local dev)
 
 ## Kubernetes via Terraform
 - See `infra/terraform/README.md` for applying to an existing cluster.

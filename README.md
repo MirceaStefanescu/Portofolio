@@ -23,4 +23,8 @@ root in its own folder.
 
 ## Current Projects
 
-- `Full Stack E-commerce Application with Angular and Spring Boot`
+- `Automated Infrastructure & Deployment Platform` - self-service platform for infra provisioning and CI/CD templates.
+- `Full Stack E-commerce Application with Angular and Spring Boot` - Angular + Spring Boot e-commerce with payments and auth.
+- `Predictive Analytics Pipeline on Kubernetes` - Kafka/Flink streaming analytics with Postgres/Elasticsearch and Grafana.
+- `Real-Time Chat & Collaboration Platform` - Spring Boot + Angular chat with Kafka, OAuth, and observability.
+- `Secure Secrets Management & Observability Toolkit` - Vault, Elasticsearch/Kibana, Prometheus, and Grafana with Terraform automation.

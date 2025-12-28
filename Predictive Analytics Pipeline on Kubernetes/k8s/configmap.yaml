@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: predictive-analytics-config
+  namespace: predictive-analytics
+data:
+  KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+  KAFKA_TOPIC: events
+  POSTGRES_URL: jdbc:postgresql://postgres:5432/analytics
+  POSTGRES_USER: analytics
+  ELASTICSEARCH_HOST: http://elasticsearch:9200
+  SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/analytics
+  SPRING_DATASOURCE_USERNAME: analytics
