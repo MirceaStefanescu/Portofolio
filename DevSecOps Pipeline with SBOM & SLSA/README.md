@@ -34,18 +34,20 @@ flowchart LR
   Scan --> Gate[Policy Gate]
   Sign --> Gate
   Gate --> Publish[Publish Artifacts]
+  Publish --> Promote[Promote Release]
 
   subgraph Clouds[AWS / Azure / GCP]
     Registry[(Container Registry)]
     Store[(Replicated Object Storage)]
   end
 
-  Publish --> Registry
-  Publish --> Store
+  Promote --> Registry
+  Promote --> Store
+  Registry --> Deploy[Deploy to Clusters]
   Store --> Backup[Backups]
 ```
 
-CI builds produce artifacts and SBOMs, which are scanned and signed before policy gates allow promotion. Signed artifacts and SBOMs are stored in replicated object storage with backups, while container images are pushed to the registry in each cloud for high availability.
+CI builds produce artifacts and SBOMs, which are scanned and signed before policy gates allow promotion. Signed artifacts and SBOMs are stored in replicated object storage with backups, while container images are pushed to registries in each cloud for high availability and deployment.
 
 ## Tech stack (and why)
 - GitHub Actions: repo-native CI workflows with policy gates and traceable runs.

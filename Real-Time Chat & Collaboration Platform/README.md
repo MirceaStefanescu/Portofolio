@@ -61,6 +61,7 @@ flowchart LR
   API --> Postgres[(PostgreSQL)]
   API --> Kafka[(Kafka)]
   Kafka --> API
+  API --> OAuth[OAuth2 Provider]
   API --> Prometheus[Prometheus]
   Prometheus --> Grafana[Grafana]
 ```
