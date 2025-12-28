@@ -9,6 +9,7 @@ root in its own folder.
 
 ## Portfolio launcher
 - Run: `./portfolio-launcher.sh --list`
+- Presets: `./portfolio-launcher.sh --presets`
 - Runbook: `PORTFOLIO_RUNBOOK.md`
 
 ## Project Guidelines

@@ -31,18 +31,55 @@ done < <(printf '%s\n' "${projects[@]}")
 
 print_help() {
   cat <<'HELP'
-Usage: ./portfolio-launcher.sh [--list] [--show <name|index>] [--run <name|index>]
+Usage: ./portfolio-launcher.sh [--list] [--show <name|index>] [--run <name|index>] [--presets] [--preset <name>]
 
 Options:
   --list              List projects
   --show <name|index> Show run command and notes
   --run <name|index>  Run the project command (with confirmation)
+  --presets           List available stack presets
+  --preset <name>     Show projects and run commands for a preset
 HELP
 }
 
 list_projects() {
   for i in "${!names[@]}"; do
     printf '%2d) %s\n' "$((i + 1))" "${names[$i]}"
+  done
+}
+
+preset_names() {
+  cat <<'PRESETS'
+fullstack  - Cloud and UI-heavy apps
+data       - Streaming analytics and pipelines
+devops     - Delivery, GitOps, infra automation
+security   - Security-first systems and tooling
+PRESETS
+}
+
+preset_indexes() {
+  case "$1" in
+    fullstack) echo "2 4 5 10" ;;
+    data) echo "9" ;;
+    devops) echo "1 6 7 8 13" ;;
+    security) echo "3 11 12" ;;
+    *) return 1 ;;
+  esac
+}
+
+show_preset() {
+  local preset="$1"
+  local idxs
+  if ! idxs=$(preset_indexes "$preset"); then
+    printf 'Unknown preset: %s\n' "$preset" >&2
+    exit 1
+  fi
+
+  printf 'Preset: %s\n' "$preset"
+  for idx in $idxs; do
+    local zero_index=$((idx - 1))
+    printf '%2d) %s\n' "$idx" "${names[$zero_index]}"
+    printf '    Run: %s\n' "${commands[$zero_index]}"
   done
 }
 
@@ -139,6 +176,16 @@ case "${1:-}" in
       printf 'Unknown project: %s\n' "$2" >&2
       exit 1
     fi
+    ;;
+  --presets)
+    preset_names
+    ;;
+  --preset)
+    if [[ -z "${2:-}" ]]; then
+      printf 'Missing preset name for --preset\n' >&2
+      exit 1
+    fi
+    show_preset "$2"
     ;;
   *)
     print_help

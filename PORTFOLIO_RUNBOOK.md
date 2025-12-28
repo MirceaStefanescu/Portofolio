@@ -6,6 +6,8 @@ Quick local run commands for each project. For full prerequisites and configurat
 - List projects: `./portfolio-launcher.sh --list`
 - Show details: `./portfolio-launcher.sh --show "Cloud-Native E-Commerce Platform"`
 - Run a project: `./portfolio-launcher.sh --run "Cloud-Native E-Commerce Platform"`
+- List presets: `./portfolio-launcher.sh --presets`
+- Show a preset: `./portfolio-launcher.sh --preset devops`
 
 ## Projects
 - Automated Infrastructure & Deployment Platform: `make dev` (portal http://localhost:8080)
