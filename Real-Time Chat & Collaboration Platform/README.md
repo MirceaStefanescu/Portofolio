@@ -1,50 +1,78 @@
 # Real-Time Chat & Collaboration Platform
 
-Developed a real-time chat and collaboration platform using Spring Boot with WebSocket/STOMP backend and Angular front-end with RxJS. Implemented PostgreSQL persistence and Kafka for scalability, containerized with Docker and deployed on Kubernetes via Terraform. Built CI/CD pipelines with Jenkins and integrated OAuth2 authentication along with Grafana and Prometheus for observability.
+Real-time chat and collaboration platform for product teams that need low-latency messaging with reliable history and observability.
 
 ## Features
-- Real-time messaging with WebSocket/STOMP and room subscriptions
-- Kafka-backed message fan-out for horizontal scaling
-- PostgreSQL persistence with message history and room management
-- OAuth2 login (GitHub example) with session-based security
+- WebSocket/STOMP messaging with room subscriptions
+- Kafka-backed fan-out for horizontal scaling
+- PostgreSQL persistence for room and message history
+- OAuth2 (GitHub) login with session-based access
 - Prometheus metrics and Grafana dashboards
-- Docker Compose for local dev and Terraform for Kubernetes deployments
+- Docker Compose for local dev and Terraform for Kubernetes deploys
 
-## Skills and Deliverables
-- Spring Boot
-- Angular
-- Apache Kafka
-- Jenkins
-- Kubernetes
+## Tech stack (and why)
+- Backend: Spring Boot for WebSocket/STOMP, REST APIs, and OAuth2 security.
+- Frontend: Angular + RxJS for reactive real-time UI.
+- Eventing: Kafka for scalable message fan-out.
+- Data: PostgreSQL for durable history and room metadata.
+- Observability: Prometheus + Grafana for metrics and dashboards.
+- Infra: Docker Compose for local, Terraform for Kubernetes.
 
-## Quick Start (Docker)
-1. Copy `.env.example` to `.env` and set OAuth2 credentials.
-2. Ensure the GitHub OAuth callback is `http://localhost:4201/login/oauth2/code/github`.
-3. Run `docker compose -f infra/docker-compose.yml up --build`.
-4. Open `http://localhost:4201` and sign in with GitHub (backend is on `http://localhost:8081`).
+## Demo
+- Live: TBD
+- Video or GIF: TBD
+- Screenshots: `docs/screenshots/chat-ui.svg`
 
-## Local Development
-- Backend: `cd backend` then `mvn spring-boot:run`
-- Frontend: `cd frontend` then `npm install` and `npm start`
-- Infrastructure: `docker compose -f infra/docker-compose.yml up -d postgres kafka`
+![Chat UI](docs/screenshots/chat-ui.svg)
 
-## OAuth2
-- Create a GitHub OAuth app with callback URL `http://localhost:4201/login/oauth2/code/github` for Docker Compose.
-- For local dev (backend only), use `http://localhost:8080/login/oauth2/code/github`.
-- Set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in `.env` or your shell.
-- REST and WebSocket features require an authenticated session.
+## Quickstart (local)
+Prereqs:
+- Docker and Docker Compose
+- GitHub OAuth app (optional unless using demo auth)
 
-## Observability
-- Prometheus: `http://localhost:9090`
-- Grafana: `http://localhost:3000` (default `admin` / `admin`)
-- Backend metrics: `http://localhost:8081/actuator/prometheus` (Docker Compose) or `http://localhost:8080/actuator/prometheus` (local dev)
+Run:
+```
+docker compose -f infra/docker-compose.yml up --build
+```
+Or:
+```
+make dev
+```
 
-## Kubernetes via Terraform
-- See `infra/terraform/README.md` for applying to an existing cluster.
+Auth options:
+- OAuth2: set `GITHUB_CLIENT_ID` and `GITHUB_CLIENT_SECRET` in `.env` and use callback `http://localhost:4201/login/oauth2/code/github`.
+- Demo mode: set `DEMO_AUTH=true` in `.env` to bypass OAuth locally.
 
-## Project Structure
-- `backend/` Spring Boot service
-- `frontend/` Angular client
-- `infra/` Docker Compose, Terraform, and observability config
-- `ci/` Jenkins pipeline definition
-- `docs/` architecture, API, and deployment notes
+Open:
+- Frontend: http://localhost:4201
+- Backend: http://localhost:8081
+
+## Architecture
+```mermaid
+flowchart LR
+  UI[Angular UI] -->|REST + WebSocket| API[Spring Boot API]
+  API --> Postgres[(PostgreSQL)]
+  API --> Kafka[(Kafka)]
+  Kafka --> API
+  API --> Prometheus[Prometheus]
+  Prometheus --> Grafana[Grafana]
+```
+
+Detailed flow and scaling notes in `docs/architecture.md`.
+
+## Tests
+```
+mvn -f backend/pom.xml test
+```
+
+## Security
+Secrets: use `.env` (see `.env.example`). OAuth2 session cookies protect REST and WebSocket access. Demo auth is for local development only.
+
+## Notes / limitations
+- Status: MVP; OAuth2 is required unless demo auth is enabled.
+- Kafka fan-out is configured for local single-broker usage.
+
+## Roadmap / tradeoffs
+- Add presence, typing indicators, and message search.
+- Introduce Redis for presence and rate limiting.
+- Tradeoff: session-based auth keeps the UI simple but complicates API use from external clients.

@@ -17,17 +17,29 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
   private final String frontendBaseUrl;
   private final String corsAllowedOrigins;
+  private final boolean demoAuthEnabled;
 
   public SecurityConfig(
       @Value("${app.frontend-base-url}") String frontendBaseUrl,
-      @Value("${app.cors-allowed-origins}") String corsAllowedOrigins
+      @Value("${app.cors-allowed-origins}") String corsAllowedOrigins,
+      @Value("${app.demo-auth:false}") boolean demoAuthEnabled
   ) {
     this.frontendBaseUrl = frontendBaseUrl;
     this.corsAllowedOrigins = corsAllowedOrigins;
+    this.demoAuthEnabled = demoAuthEnabled;
   }
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    if (demoAuthEnabled) {
+      http
+          .authorizeHttpRequests(auth -> auth.anyRequest().permitAll())
+          .csrf(csrf -> csrf.disable())
+          .cors(cors -> {});
+
+      return http.build();
+    }
+
     http
         .authorizeHttpRequests(auth -> auth
             .requestMatchers("/actuator/**", "/oauth2/**", "/login/**", "/error", "/ws/**").permitAll()

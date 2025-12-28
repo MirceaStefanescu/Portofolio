@@ -12,6 +12,7 @@
 - `KAFKA_CONSUMER_GROUP` (optional) to override the default per-instance consumer group.
 - `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` for OAuth2 login.
 - `FRONTEND_BASE_URL` and `CORS_ALLOWED_ORIGINS` for redirects and CORS.
+- `DEMO_AUTH` and `DEMO_USER` to enable demo login without OAuth (local only).
 
 `.env` is local-only and should not be committed; use `.env.example` as the template.
 OAuth credentials are required for the UI to access protected APIs.
