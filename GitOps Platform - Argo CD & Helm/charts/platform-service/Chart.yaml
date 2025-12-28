@@ -1,0 +1,6 @@
+apiVersion: v2
+name: platform-service
+description: Demo microservice chart for GitOps platform rollouts
+type: application
+version: 0.1.0
+appVersion: "6.5.3"

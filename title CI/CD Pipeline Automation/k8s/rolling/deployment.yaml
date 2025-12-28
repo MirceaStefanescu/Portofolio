@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cicd-demo-rolling
+  namespace: cicd-demo
+  labels:
+    app: cicd-demo
+    track: stable
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: cicd-demo
+      track: stable
+  template:
+    metadata:
+      labels:
+        app: cicd-demo
+        track: stable
+    spec:
+      containers:
+        - name: app
+          image: cicd-demo:local
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: cicd-demo-env
+          env:
+            - name: RELEASE_COLOR
+              value: rolling
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+            initialDelaySeconds: 10
+            periodSeconds: 20

@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CI/CD Pipeline Automation</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="page">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">CI/CD Pipeline Automation</p>
+          <h1>Zero-downtime releases with Jenkins, Docker, Terraform, and Ansible</h1>
+          <p class="subhead">
+            This demo app exposes health, build, and deployment metadata to
+            validate the automated delivery pipeline end-to-end.
+          </p>
+        </div>
+        <div class="card">
+          <h2>Deployment Status</h2>
+          <dl>
+            <div>
+              <dt>Environment</dt>
+              <dd id="env">Loading...</dd>
+            </div>
+            <div>
+              <dt>Release color</dt>
+              <dd id="color">Loading...</dd>
+            </div>
+            <div>
+              <dt>Build ID</dt>
+              <dd id="build">Loading...</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
+      <section class="grid">
+        <div class="card">
+          <h3>Pipeline Stages</h3>
+          <ol id="stages"></ol>
+        </div>
+        <div class="card">
+          <h3>Build Metadata</h3>
+          <dl>
+            <div>
+              <dt>Service</dt>
+              <dd id="service">Loading...</dd>
+            </div>
+            <div>
+              <dt>Git SHA</dt>
+              <dd id="sha">Loading...</dd>
+            </div>
+            <div>
+              <dt>Started at</dt>
+              <dd id="started">Loading...</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+    </main>
+    <script src="/app.js"></script>
+  </body>
+</html>

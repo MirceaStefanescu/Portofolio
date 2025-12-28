@@ -1,0 +1,83 @@
+version: "3.9"
+
+services:
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.5.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+
+  kafka:
+    image: confluentinc/cp-kafka:7.5.0
+    depends_on:
+      - zookeeper
+    ports:
+      - "29092:29092"
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,PLAINTEXT_HOST://0.0.0.0:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092,PLAINTEXT_HOST://localhost:29092
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,PLAINTEXT_HOST:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  product-service:
+    build: ./services/product-service
+    ports:
+      - "8010:8000"
+    environment:
+      DB_PATH: /data/products.db
+      KAFKA_BOOTSTRAP: kafka:9092
+      KAFKA_TOPIC: products
+    volumes:
+      - product-data:/data
+    depends_on:
+      - kafka
+
+  order-service:
+    build: ./services/order-service
+    ports:
+      - "8020:8000"
+    environment:
+      DB_PATH: /data/orders.db
+      PRODUCT_SERVICE_URL: http://product-service:8000
+      KAFKA_BOOTSTRAP: kafka:9092
+      KAFKA_TOPIC_ORDERS: orders
+      KAFKA_TOPIC_PAYMENTS: payments
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      PAYMENT_QUEUE: payment.requests
+    volumes:
+      - order-data:/data
+    depends_on:
+      - kafka
+      - rabbitmq
+      - product-service
+
+  payment-service:
+    build: ./services/payment-service
+    ports:
+      - "8030:8000"
+    environment:
+      DB_PATH: /data/payments.db
+      KAFKA_BOOTSTRAP: kafka:9092
+      KAFKA_TOPIC_PAYMENTS: payments
+      RABBITMQ_URL: amqp://guest:guest@rabbitmq:5672/
+      PAYMENT_QUEUE: payment.requests
+    volumes:
+      - payment-data:/data
+    depends_on:
+      - kafka
+      - rabbitmq
+
+volumes:
+  product-data:
+  order-data:
+  payment-data:

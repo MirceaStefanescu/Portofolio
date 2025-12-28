@@ -1,0 +1,76 @@
+services:
+  otel-collector:
+    image: otel/opentelemetry-collector-contrib:0.96.0
+    command: ["--config=/etc/otel-collector/${OTEL_COLLECTOR_CONFIG:-config.yaml}"]
+    volumes:
+      - ./otel-collector:/etc/otel-collector:ro
+    ports:
+      - "4317:4317"
+      - "4318:4318"
+      - "8889:8889"
+    environment:
+      - NEW_RELIC_LICENSE_KEY=${NEW_RELIC_LICENSE_KEY:-}
+
+  telemetrygen-traces:
+    image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.96.0
+    command:
+      [
+        "traces",
+        "--otlp-endpoint",
+        "otel-collector:4317",
+        "--otlp-insecure",
+        "--duration",
+        "0s",
+        "--rate",
+        "1",
+        "--service",
+        "demo-service"
+      ]
+    depends_on:
+      - otel-collector
+    restart: unless-stopped
+
+  telemetrygen-metrics:
+    image: ghcr.io/open-telemetry/opentelemetry-collector-contrib/telemetrygen:v0.96.0
+    command:
+      [
+        "metrics",
+        "--otlp-endpoint",
+        "otel-collector:4317",
+        "--otlp-insecure",
+        "--duration",
+        "0s",
+        "--rate",
+        "1",
+        "--otlp-attributes",
+        "service.name=\"demo-service\""
+      ]
+    depends_on:
+      - otel-collector
+    restart: unless-stopped
+
+  prometheus:
+    image: prom/prometheus:v2.49.1
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      - "9090:9090"
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning:ro
+    ports:
+      - "3000:3000"
+
+volumes:
+  prometheus-data:
+  grafana-data:

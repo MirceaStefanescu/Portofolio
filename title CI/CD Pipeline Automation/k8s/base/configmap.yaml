@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cicd-demo-env
+  namespace: cicd-demo
+data:
+  ENVIRONMENT: dev
+  BUILD_ID: local
+  GIT_SHA: dev
+  DEPLOY_MODE: blue-green

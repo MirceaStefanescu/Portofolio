@@ -1,0 +1,36 @@
+services:
+  app:
+    build: .
+    environment:
+      PORT: 8080
+      ENVIRONMENT: dev
+      RELEASE_COLOR: blue
+      BUILD_ID: local
+      GIT_SHA: dev
+    ports:
+      - "8080:8080"
+
+  prometheus:
+    image: prom/prometheus:v2.49.1
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./monitoring/prometheus/rules.yml:/etc/prometheus/rules.yml:ro
+    ports:
+      - "9090:9090"
+    depends_on:
+      - app
+
+  grafana:
+    image: grafana/grafana:10.4.2
+    environment:
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: admin
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards
+    ports:
+      - "3000:3000"
+    depends_on:
+      - prometheus

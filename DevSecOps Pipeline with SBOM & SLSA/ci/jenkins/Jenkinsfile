@@ -1,0 +1,55 @@
+pipeline {
+  agent any
+
+  environment {
+    REGISTRY = "localhost:5000"
+    IMAGE_NAME = "devsecops-demo"
+    IMAGE_TAG = "${env.BUILD_NUMBER}"
+    IMAGE = "${REGISTRY}/${IMAGE_NAME}:${IMAGE_TAG}"
+    POLICY_SEVERITY = "HIGH,CRITICAL"
+    POLICY_FAIL_ON = "high"
+  }
+
+  stages {
+    stage('Build') {
+      steps {
+        sh 'docker build -t $IMAGE app'
+        sh 'docker push $IMAGE'
+      }
+    }
+
+    stage('SBOM') {
+      steps {
+        sh 'mkdir -p artifacts'
+        sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v "$PWD/artifacts:/artifacts" aquasec/trivy:latest image --quiet --format cyclonedx --output /artifacts/sbom.cdx.json $IMAGE'
+      }
+    }
+
+    stage('Scan') {
+      steps {
+        sh 'docker run --rm -v "$PWD/app:/workspace" aquasec/trivy:latest fs --quiet --scanners vuln --exit-code 1 --severity $POLICY_SEVERITY /workspace'
+        sh 'docker run --rm -v "$PWD/app:/workspace" anchore/grype:latest dir:/workspace --fail-on $POLICY_FAIL_ON -q'
+        sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasec/trivy:latest image --quiet --exit-code 1 --severity $POLICY_SEVERITY $IMAGE'
+        sh 'docker run --rm -v /var/run/docker.sock:/var/run/docker.sock anchore/grype:latest $IMAGE --fail-on $POLICY_FAIL_ON -q'
+      }
+    }
+
+    stage('Sign') {
+      steps {
+        withCredentials([
+          file(credentialsId: 'cosign-key', variable: 'COSIGN_KEY'),
+          string(credentialsId: 'cosign-password', variable: 'COSIGN_PASSWORD')
+        ]) {
+          sh 'docker run --rm --network host -e COSIGN_PASSWORD="$COSIGN_PASSWORD" -v "$COSIGN_KEY:/keys/cosign.key:ro" gcr.io/projectsigstore/cosign:latest sign --yes --key /keys/cosign.key $IMAGE'
+          sh 'docker run --rm --network host -e COSIGN_PASSWORD="$COSIGN_PASSWORD" -v "$COSIGN_KEY:/keys/cosign.key:ro" -v "$PWD/policy:/policy:ro" gcr.io/projectsigstore/cosign:latest attest --yes --key /keys/cosign.key --predicate /policy/provenance.json --type https://slsa.dev/provenance/v0.2 $IMAGE'
+        }
+      }
+    }
+  }
+
+  post {
+    always {
+      archiveArtifacts artifacts: 'artifacts/*', fingerprint: false
+    }
+  }
+}

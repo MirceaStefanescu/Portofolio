@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-prod
+  namespace: argocd
+  labels:
+    environment: prod
+spec:
+  project: platform
+  source:
+    repoURL: https://github.com/MirceaStefanescu/Portofolio.git
+    targetRevision: main
+    path: "GitOps Platform - Argo CD & Helm/charts/platform-service"
+    helm:
+      releaseName: platform-service
+      valueFiles:
+        - env/prod.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: platform-prod
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

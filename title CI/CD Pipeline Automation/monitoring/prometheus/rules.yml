@@ -1,0 +1,11 @@
+groups:
+  - name: cicd-demo-alerts
+    rules:
+      - alert: DemoAppDown
+        expr: up{job="cicd-demo"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "CI/CD demo app is down"
+          description: "Prometheus cannot scrape the demo application."

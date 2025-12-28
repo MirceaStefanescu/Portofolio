@@ -1,0 +1,23 @@
+{
+  "buildType": "https://slsa.dev/container-based-build/v1",
+  "builder": {
+    "id": "devsecops-pipeline-local"
+  },
+  "invocation": {
+    "configSource": {
+      "uri": "local://devsecops-pipeline",
+      "digest": {}
+    },
+    "parameters": {
+      "pipeline": "local"
+    }
+  },
+  "metadata": {
+    "buildInvocationId": "local"
+  },
+  "materials": [
+    {
+      "uri": "app/Dockerfile"
+    }
+  ]
+}

@@ -1,0 +1,118 @@
+# GitOps Platform - Argo CD & Helm
+
+GitOps delivery platform for platform engineers and SREs who need repeatable, auditable multi-environment microservice deployments with fast rollbacks and disaster recovery.
+
+## Features
+- Argo CD app-of-apps manages dev/staging/prod with drift detection and self-healing.
+- Helm charts with environment-specific values stored in Git for consistent releases.
+- GitHub Actions promotion pipelines update env values and trigger Argo CD syncs with approvals.
+- Terraform provisions EKS/AKS/GKE clusters with shared networking and IAM baselines.
+- Progressive delivery (canary and blue/green) with automated rollback gates.
+- Velero backups for cluster state and persistent volumes to support DR.
+
+## Tech stack (and why)
+- Argo CD: GitOps reconciliation, drift detection, and audit trails.
+- Helm: templated manifests and per-environment configuration.
+- GitHub Actions: promotion automation and policy gates.
+- Terraform: consistent multi-cloud provisioning for Kubernetes clusters.
+- Kubernetes (EKS/AKS/GKE): managed clusters across dev/staging/prod.
+- Argo Rollouts: canary and blue/green deployments with rollback controls.
+- Velero: backup and restore workflows for disaster recovery.
+- Docker: consistent build/runtime for CI jobs and tooling.
+
+## Demo
+- Live: TBD
+- Video or GIF: TBD
+- Screenshots: TBD
+
+## Quickstart (local)
+Prereqs:
+- Docker
+- kind
+- kubectl
+- Helm
+- Make
+- Terraform (for cloud provisioning)
+
+Run:
+```
+make dev
+```
+
+Argo CD access:
+```
+make argocd-password
+make port-forward-argocd
+```
+
+Promote an image tag:
+```
+make promote ENV=staging TAG=6.5.4 STRATEGY=blueGreen
+```
+
+Back up environments:
+```
+make backup
+```
+
+Note: the Argo CD manifests currently point to the portfolio repo and the `GitOps Platform - Argo CD & Helm` subfolder. Update the `repoURL` and `path` in `apps/bootstrap/app-of-apps.yaml` and `apps/environments/*.yaml` to match your mirrored repo before running Argo CD, then push so Argo CD can pull it.
+```
+
+## Architecture
+```mermaid
+flowchart LR
+  subgraph Git[Git Repos]
+    Charts[Helm Charts]
+    Values[Env Values]
+  end
+  GHA[GitHub Actions]
+  Argo[Argo CD]
+  Rollouts[Argo Rollouts]
+  Velero[Velero Backups]
+  TF[Terraform]
+  subgraph Clouds[AWS / Azure / GCP]
+    Dev[Dev Cluster]
+    Staging[Staging Cluster]
+    Prod[Prod Cluster]
+  end
+
+  Charts --> Argo
+  Values --> Argo
+  Values --> GHA
+  GHA --> Values
+  GHA --> Argo
+  Argo --> Dev
+  Argo --> Staging
+  Argo --> Prod
+  Argo --> Rollouts
+  Dev --> Velero
+  Staging --> Velero
+  Prod --> Velero
+  TF --> Dev
+  TF --> Staging
+  TF --> Prod
+```
+
+Helm charts and environment-specific values live in Git. GitHub Actions promotes changes by updating environment values and triggering Argo CD syncs. Argo CD reconciles clusters across dev/staging/prod, with progressive delivery handled by Argo Rollouts and backups handled by Velero. Terraform provisions the multi-cloud clusters and baseline infrastructure.
+
+## Tests
+```
+make test
+```
+
+## Security
+Secrets: use `.env` (see `.env.example`). Store cloud credentials in OIDC-backed GitHub Actions secrets, restrict Argo CD access with RBAC, and enable namespace isolation plus network policies between environments. Velero backups should use encrypted buckets and least-privilege IAM roles. Enable secret scanning and Dependabot in GitHub.
+
+## Roadmap / tradeoffs
+- Add policy-as-code checks (OPA/Conftest) for Helm and Terraform.
+- Add promotion metrics and deployment DORA dashboards.
+- Add automated verification gates for canary analysis.
+- Tradeoff: multi-cloud parity improves resilience but increases operational overhead.
+
+## Tags
+terraform, kubernetes, ci/cd, helm, argo cd, gitops, velero, multi-env
+
+## Skills and tools
+Tools and software: docker, terraform, kubernetes, helm, github actions, argo cd, velero.
+
+Skills: kubernetes, devops, terraform, ci/cd.

@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: gitops-platform
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/MirceaStefanescu/Portofolio.git
+    targetRevision: main
+    path: "GitOps Platform - Argo CD & Helm/apps/environments"
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: argocd
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true

@@ -1,0 +1,20 @@
+environment: prod
+replicaCount: 3
+
+image:
+  tag: "6.5.3"
+
+rollout:
+  enabled: true
+  strategy: blueGreen
+  blueGreen:
+    autoPromotionEnabled: false
+    previewReplicaCount: 1
+
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi
+  requests:
+    cpu: 200m
+    memory: 256Mi

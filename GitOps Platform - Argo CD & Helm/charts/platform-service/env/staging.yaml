@@ -1,0 +1,12 @@
+environment: staging
+replicaCount: 2
+
+image:
+  tag: "6.5.3"
+
+rollout:
+  enabled: true
+  strategy: blueGreen
+  blueGreen:
+    autoPromotionEnabled: true
+    previewReplicaCount: 1

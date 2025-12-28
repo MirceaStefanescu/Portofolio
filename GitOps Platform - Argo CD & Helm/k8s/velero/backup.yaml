@@ -1,0 +1,10 @@
+apiVersion: velero.io/v1
+kind: Backup
+metadata:
+  name: gitops-platform-backup
+  namespace: velero
+spec:
+  includedNamespaces:
+    - platform-dev
+    - platform-staging
+    - platform-prod
