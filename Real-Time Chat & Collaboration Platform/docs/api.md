@@ -12,8 +12,13 @@
 - `GET /api/rooms/{roomId}/messages?limit=50`
   - Returns recent messages for a room.
 
+## Authentication
+- Login: `GET /oauth2/authorization/github` (browser redirect).
+- The session cookie is required for REST and WebSocket access.
+
 ## WebSocket/STOMP
 - Connect: `/ws`
 - Subscribe: `/topic/rooms/{roomId}`
 - Send: `/app/rooms/{roomId}/send`
   - Body: `{ "sender": "Mircea", "content": "Hello" }`
+  - `sender` is optional; when omitted the backend uses the authenticated principal or `anonymous`.

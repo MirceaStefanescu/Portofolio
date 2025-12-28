@@ -6,6 +6,16 @@
 3. Frontend: `http://localhost:4200`
 4. Backend: `http://localhost:8080`
 
+## Environment Variables
+- `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` for PostgreSQL.
+- `KAFKA_BOOTSTRAP_SERVERS` for Kafka connectivity.
+- `KAFKA_CONSUMER_GROUP` (optional) to override the default per-instance consumer group.
+- `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET` for OAuth2 login.
+- `FRONTEND_BASE_URL` and `CORS_ALLOWED_ORIGINS` for redirects and CORS.
+
+`.env` is local-only and should not be committed; use `.env.example` as the template.
+OAuth credentials are required for the UI to access protected APIs.
+
 ## Kubernetes via Terraform
 1. Build and push images for `backend` and `frontend`.
 2. Export your kubeconfig and set image variables.
