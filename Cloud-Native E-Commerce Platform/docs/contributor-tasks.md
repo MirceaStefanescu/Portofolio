@@ -34,3 +34,9 @@ Scope:
 Acceptance criteria:
 - Logs show a stable request ID for a request lifecycle.
 - API responses include an `X-Request-Id` header.
+
+## Creating GitHub issues
+If you want to publish these tasks as GitHub issues, run:
+```
+GITHUB_TOKEN=... GITHUB_REPO=owner/repo ./scripts/create_github_issues.sh
+```

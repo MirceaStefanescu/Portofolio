@@ -151,7 +151,12 @@ Secrets: use `.env` (see `.env.example`). No secrets are committed. For producti
 - Keep Actions, Dependabot, and secret scanning enabled.
 
 ## Performance
-Local benchmark harness (optional):
+Local benchmark harness:
 - Script: `perf/k6/products-load.js`
 - Run: `k6 run perf/k6/products-load.js` (set `BASE_URL` to target another host)
-- Results: TBD (capture p95 latency and error rate)
+- Scenario: 10 VUs for 30s, `POST /products` + `GET /products`
+- Baseline (local Docker Compose):
+  - Avg latency: 16.69 ms
+  - p95 latency: 73.23 ms
+  - Throughput: 19.04 req/s
+  - Errors: 0.00%
