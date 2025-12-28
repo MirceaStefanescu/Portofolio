@@ -48,6 +48,10 @@ Dashboards:
 - Prometheus: http://localhost:9091
 - Grafana: http://localhost:13000 (admin / admin)
 
+Docs:
+- API: `docs/api.md`
+- Event contracts: `docs/events.md`
+
 ## Architecture
 ```mermaid
 flowchart LR
@@ -108,7 +112,8 @@ Secrets: use `.env` (see `.env.example`). Prefer IAM roles for service-to-servic
 - Tradeoff: event choreography improves decoupling but increases observability complexity.
 
 ## Notes / limitations
-- The runnable scaffold includes Order and Inventory services; additional services are described in the architecture section.
+- Status: MVP with Order and Inventory services runnable locally.
+- Additional services are described in the architecture section.
 - AWS/Terraform/Jenkins definitions are documented but not yet checked in for this local demo.
 
 ## Decisions and rationale
