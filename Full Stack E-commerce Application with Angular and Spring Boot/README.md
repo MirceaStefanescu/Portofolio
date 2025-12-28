@@ -1,139 +1,96 @@
 # Full Stack E-commerce Application with Angular and Spring Boot
 
-## Overview
+Full-stack e-commerce web app for shoppers and store owners, built as an Angular single-page application with a Spring Boot REST API and Stripe payments.
 
-Full stack e-commerce application with an Angular front end and Spring Boot back
-end. The app includes a product catalog, shopping cart, user authentication,
-Stripe payment processing, and MySQL persistence. The UI is responsive and built
-with TypeScript and CSS, and the stack is prepared for Docker and Kubernetes
-deployment.
+This project demonstrates an end-to-end online shop with a modern SPA UI, RESTful APIs, and external payment integration.
 
-## Tech Stack
+## Features
+- JWT-based authentication with bcrypt-hashed passwords
+- Product catalog with categories and seeded sample data
+- Shopping cart with quantity updates and total calculations
+- Checkout flow with Stripe payment intents (demo mode supported)
+- Order creation, confirmation, and history APIs
 
-- Angular (latest)
-- Spring Boot 4
-- Java 21
-- MySQL
-- Stripe API
-- Docker
-- Kubernetes
+## Tech stack
+- Backend: Spring Boot 4 (Java 21), Spring Security, JPA/Hibernate, JWT (mature, production-ready REST stack)
+- Frontend: Angular 21, TypeScript, RxJS (typed SPA with component-driven UI)
+- Infra: MySQL 8, Docker Compose, Nginx, Stripe API (local parity and external payment integration)
+- CI: GitHub Actions (planned)
 
-## Status
+## Demo
+- Live: Not deployed yet.
+- Video or GIF: Add a 60 to 120 second walkthrough.
+- Screenshots: Add `docs/screenshots/home.png`, `docs/screenshots/catalog.png`, `docs/screenshots/checkout.png`.
 
-- End-to-end flow with auth, catalog, cart, orders, and Stripe checkout
+## Quickstart (local)
+Prereqs:
+- Docker (recommended)
+- Or: Node.js 20+, Angular CLI, Java 21, Maven, MySQL 8+
 
-## Structure
-
-- `frontend/` - Angular app
-- `backend/` - Spring Boot app
-- `docs/` - module-specific docs
-
-## Key Features
-
-- Product catalog with category browsing
-- Shopping cart with add/remove/update quantity
-- User authentication and protected checkout
-- Stripe payment intents and confirmation
-- MySQL-backed persistence for products, users, and orders
-- Responsive UI optimized for desktop and mobile
-- Containerized deployment with Docker and Kubernetes manifests
-
-## Local Development
-
-### Prerequisites
-
-- Node.js 20+ and npm
-- Angular CLI
-- Java 21
-- Maven
-- MySQL 8+
-- A Stripe account and API keys
-
-### Environment Setup
-
-Create environment files:
-
-- `backend/.env` (copy `backend/.env.example`)
-
-Recommended variables:
-
-- `SPRING_DATASOURCE_URL=jdbc:mysql://localhost:3306/ecommerce`
-- `SPRING_DATASOURCE_USERNAME=ecommerce`
-- `SPRING_DATASOURCE_PASSWORD=ecommerce`
-- `JWT_SECRET=change_me_to_a_long_random_string_at_least_32_bytes`
-- `JWT_TTL_MINUTES=60`
-- `STRIPE_SECRET_KEY=sk_test_...`
-- `STRIPE_WEBHOOK_SECRET=whsec_...`
-
-Frontend API base URL:
-
-- Update `frontend/src/app/core/config/app-config.ts` to match your backend URL.
-- Set `STRIPE_PUBLISHABLE_KEY` in `frontend/src/app/core/config/app-config.ts`.
-
-Stripe test card:
-
-- `4242 4242 4242 4242` with any future expiry and CVC
-
-Demo mode:
-
-- If Stripe keys are not configured, checkout runs in demo mode and simulates the payment intent.
-
-### Run Backend
-
-From `backend/`:
-
+Run with Docker (one command):
 ```bash
-mvn spring-boot:run
+docker compose up --build
 ```
+Then open `http://localhost:4200`.
 
-### Run Frontend
-
-From `frontend/`:
-
+Run without Docker:
 ```bash
+# backend
+cd backend
+cp .env.example .env
+./mvnw spring-boot:run
+
+# frontend
+cd ../frontend
 npm install
 npm run start
 ```
 
-### Run Tests
+Frontend config:
+- Update `frontend/src/app/core/config/app-config.ts` for `API_BASE_URL` and `STRIPE_PUBLISHABLE_KEY`.
 
+Usage:
+- Register a user, browse the catalog, add items to the cart, and checkout.
+- Stripe test card: `4242 4242 4242 4242` with any future expiry and CVC.
+
+Sample data:
+- The backend seeds a few products on first run.
+
+## Architecture
+```mermaid
+flowchart LR
+  Browser[Angular SPA] -->|HTTPS/JSON| API[Spring Boot REST API]
+  API -->|JPA/Hibernate| DB[(MySQL)]
+  API -->|Stripe SDK| Stripe[Stripe Payments]
+```
+The Angular app runs as a SPA (dev server or Nginx in Docker) and talks to the Spring Boot API over JSON. The backend persists data in MySQL and integrates with Stripe for payment intents. See `docs/architecture.md` for more detail.
+
+## Tests
 ```bash
 # backend
-mvn test
+cd backend
+./mvnw test
 
 # frontend
+cd ../frontend
 npm test
 ```
 
-## API Endpoints
+## Security
+Secrets are loaded from environment variables (`backend/.env`, see `backend/.env.example`). Authentication uses Spring Security with JWTs, bcrypt password hashing, and Jakarta Validation for request input. This is a demo app and does not include production hardening like rate limiting, audit logging, or advanced fraud checks.
 
-- `GET /api/health`
-- `GET /api/products`
-- `GET /api/products/{id}`
-- `POST /api/auth/register`
-- `POST /api/auth/login`
-- `POST /api/orders`
-- `GET /api/orders`
-- `POST /api/orders/{id}/confirm`
+## Roadmap / tradeoffs
+- Add UI screenshots and a short demo video.
+- Add GitHub Actions CI for backend and frontend checks.
+- Add integration tests for checkout and order confirmation.
+- Add a live demo deployment with seeded data.
 
-Stripe amount values are expected in the smallest currency unit (e.g., cents).
+## Notes / limitations
+- CORS is restricted to localhost origins by default.
+- Stripe runs in demo mode when no secret key is configured.
+- REST endpoints include `GET /api/products`, `POST /api/auth/login`, and `POST /api/orders`.
 
-## Docker
-
-From the module root:
-
-```bash
-docker compose up --build
-```
-
-Or run everything from the repo root:
-
-```bash
-cd "Full Stack E-commerce Application with Angular and Spring Boot"
-docker compose up --build
-```
-
-## Deployment
-
-- Docker images for frontend and backend
-- Kubernetes manifests for deployment, service, and ingress
+## Decisions and rationale
+- Angular SPA + REST API keeps UI and backend concerns decoupled for easier iteration.
+- JWT auth enables stateless scaling and clean API boundaries.
+- Docker Compose ensures a one-command local run with consistent dependencies.

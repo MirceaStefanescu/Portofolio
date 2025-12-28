@@ -2,6 +2,10 @@
 
 This folder contains supporting documentation for the e-commerce module.
 
+## Architecture
+
+- `docs/architecture.md`
+
 ## Kubernetes
 
 Manifests live under `docs/k8s/`:
@@ -19,3 +23,7 @@ include:
 - `mysql-root-password`
 - `jwt-secret`
 - `stripe-secret` (optional for demo mode)
+
+## Screenshots
+
+Add UI screenshots under `docs/screenshots/`.
