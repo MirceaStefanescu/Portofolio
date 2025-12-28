@@ -73,13 +73,17 @@ docker compose -f docker-compose.yml -f docker-compose.observability.yml up --bu
 ## Architecture
 ```mermaid
 flowchart LR
-  Client[Web / Mobile Clients] --> Gateway[API Clients]
+  Client[Web / Mobile Clients] --> Gateway[API Gateway]
 
   subgraph Services
     Product[Product Service]
     Order[Order Service]
     Payment[Payment Service]
   end
+
+  Gateway --> Product
+  Gateway --> Order
+  Gateway --> Payment
 
   Product --> ProductDB[(Product DB)]
   Order --> OrderDB[(Order DB)]
@@ -103,9 +107,18 @@ flowchart LR
   Order --> Prometheus
   Payment --> Prometheus
   Elasticsearch --> Kibana
+
+  subgraph CICD[CI/CD]
+    Repo[Git Repository] --> Jenkins[Jenkins Pipeline]
+    Jenkins --> Registry[(Container Registry)]
+    Jenkins --> Deploy[Helm / Manifests]
+  end
+  Deploy --> Product
+  Deploy --> Order
+  Deploy --> Payment
 ```
 
-Data flow: orders are created via REST, the order service publishes a payment request to RabbitMQ, the payment service processes the request, emits a payment event to Kafka, and the order service consumes that event to update order status.
+Data flow: orders are created via REST, the order service publishes a payment request to RabbitMQ, the payment service processes the request, emits a payment event to Kafka, and the order service consumes that event to update order status. CI/CD builds images, pushes to a registry, and deploys via Helm or manifests.
 
 ## Tests
 ```
@@ -120,6 +133,7 @@ Secrets: use `.env` (see `.env.example`). No secrets are committed. For producti
 - Introduce saga orchestration and idempotent payment retries.
 - Replace local SQLite with per-service PostgreSQL.
 - Tradeoff: keeping services lightweight makes local runs easy but omits advanced resilience patterns.
+- Contributor tasks: `docs/contributor-tasks.md`.
 
 ## Notes / limitations
 - Local demo uses SQLite for simplicity; swap for managed databases (RDS/Aurora) in production.
@@ -135,3 +149,9 @@ Secrets: use `.env` (see `.env.example`). No secrets are committed. For producti
 - Commit in logical chunks with clear messages.
 - Push after README/CI/quickstart remain accurate.
 - Keep Actions, Dependabot, and secret scanning enabled.
+
+## Performance
+Local benchmark harness (optional):
+- Script: `perf/k6/products-load.js`
+- Run: `k6 run perf/k6/products-load.js` (set `BASE_URL` to target another host)
+- Results: TBD (capture p95 latency and error rate)
