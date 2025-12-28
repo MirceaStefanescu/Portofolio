@@ -1,0 +1,30 @@
+<svg width="1280" height="720" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f1f5f9" />
+      <stop offset="1" stop-color="#e2e8f0" />
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="720" fill="url(#bg)" />
+
+  <rect x="80" y="60" width="1120" height="90" rx="16" fill="#0f172a" />
+  <text x="110" y="115" font-family="Arial, sans-serif" font-size="26" fill="#ffffff">Secure Secrets + Observability Toolkit</text>
+  <text x="110" y="138" font-family="Arial, sans-serif" font-size="14" fill="#cbd5f5">Vault, Filebeat, Elastic, Prometheus, Grafana</text>
+
+  <rect x="80" y="180" width="520" height="220" rx="16" fill="#ffffff" />
+  <text x="110" y="220" font-family="Arial, sans-serif" font-size="16" fill="#0f172a">Vault + Demo Service</text>
+  <rect x="110" y="245" width="460" height="120" rx="12" fill="#f8fafc" />
+  <text x="130" y="275" font-family="Arial, sans-serif" font-size="12" fill="#475569">AppRole auth, audit logs, secret rotation</text>
+
+  <rect x="680" y="180" width="520" height="220" rx="16" fill="#ffffff" />
+  <text x="710" y="220" font-family="Arial, sans-serif" font-size="16" fill="#0f172a">Elastic + Kibana</text>
+  <rect x="710" y="245" width="460" height="120" rx="12" fill="#f8fafc" />
+  <text x="730" y="275" font-family="Arial, sans-serif" font-size="12" fill="#475569">Searchable audit + app logs</text>
+
+  <rect x="80" y="430" width="1120" height="220" rx="16" fill="#ffffff" />
+  <text x="110" y="470" font-family="Arial, sans-serif" font-size="16" fill="#0f172a">Metrics and dashboards</text>
+  <rect x="110" y="495" width="520" height="120" rx="12" fill="#f8fafc" />
+  <rect x="650" y="495" width="520" height="120" rx="12" fill="#f8fafc" />
+  <text x="130" y="525" font-family="Arial, sans-serif" font-size="12" fill="#475569">Prometheus scrape targets</text>
+  <text x="670" y="525" font-family="Arial, sans-serif" font-size="12" fill="#475569">Grafana dashboards</text>
+</svg>

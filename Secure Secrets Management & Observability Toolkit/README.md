@@ -23,7 +23,9 @@ Secure secrets management and observability toolkit for platform teams that need
 ## Demo
 - Live: TBD
 - Video or GIF: TBD
-- Screenshots: TBD
+- Screenshots: `docs/screenshots/observability-stack.svg`
+
+![Observability Stack](docs/screenshots/observability-stack.svg)
 
 ## Quickstart (local)
 Prereqs:
@@ -52,6 +54,11 @@ Open dashboards:
 - Kibana: http://localhost:5601
 - Prometheus: http://localhost:9090
 - Grafana: http://localhost:3000 (admin / admin)
+
+What to expect:
+- `/secret` returns masked values fetched from Vault.
+- Kibana shows Filebeat logs (index pattern: `filebeat-*`).
+- Grafana dashboards show secret refresh and request metrics.
 
 Kibana note: create an index pattern `filebeat-*` to view logs from the demo app and Vault audit stream.
 
@@ -89,6 +96,9 @@ make test
 
 ## Security
 Secrets: use `.env` (see `.env.example`). Vault runs in dev mode for local demos, and Elasticsearch/Kibana security is disabled for simplicity. In production, enable TLS, RBAC, network policies, and authentication for Elastic and Grafana, and use auto-unseal with KMS.
+
+## Notes / limitations
+- Status: MVP; local stack runs in dev mode for fast demos.
 
 ## Roadmap / tradeoffs
 - Add policy-as-code checks (OPA/Conftest) for Vault and Kubernetes manifests.
