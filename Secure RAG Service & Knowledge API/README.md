@@ -21,8 +21,13 @@ Secure retrieval-augmented generation (RAG) microservice for platform and knowle
 
 ## Demo
 - Live: TBD
-- Video or GIF: `demo/rag-query.svg`
-- Screenshots: `demo/rag-overview.svg`
+- Video or GIF: TBD
+- Screenshots:
+  - `demo/rag-overview.svg`
+  - `demo/rag-query.svg`
+
+![RAG overview](<demo/rag-overview.svg>)
+![RAG query flow](<demo/rag-query.svg>)
 
 ## Quickstart (local)
 Prereqs:

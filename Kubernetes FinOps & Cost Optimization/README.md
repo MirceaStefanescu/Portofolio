@@ -24,7 +24,16 @@ This project standardizes cost allocation, right-sizing, and telemetry so teams 
 ## Demo
 - Live: TBD
 - Video or GIF: TBD
-- Screenshots: add to `docs/screenshots/`
+- Screenshots:
+  - `docs/screenshots/20251228_1743_Kubernetes Cost Optimization_simple_compose_01kdjsz8vmf14a1mztyazge207.png`
+  - `docs/screenshots/20251228_1743_Kubernetes Cost Optimization_simple_compose_01kdjsz8vnew58xj469rs3v9eq.png`
+  - `docs/screenshots/20251228_1743_Kubernetes Cost Optimization_simple_compose_01kdjsz8vpe07ry5thp5tvxcnz.png`
+  - `docs/screenshots/20251228_1743_Kubernetes Cost Optimization_simple_compose_01kdjsz8vqe0jvvzn9s8k51d8a.png`
+
+![Kubernetes Cost Optimization 01](<docs/screenshots/20251228_1743_Kubernetes Cost Optimization_simple_compose_01kdjsz8vmf14a1mztyazge207.png>)
+![Kubernetes Cost Optimization 02](<docs/screenshots/20251228_1743_Kubernetes Cost Optimization_simple_compose_01kdjsz8vnew58xj469rs3v9eq.png>)
+![Kubernetes Cost Optimization 03](<docs/screenshots/20251228_1743_Kubernetes Cost Optimization_simple_compose_01kdjsz8vpe07ry5thp5tvxcnz.png>)
+![Kubernetes Cost Optimization 04](<docs/screenshots/20251228_1743_Kubernetes Cost Optimization_simple_compose_01kdjsz8vqe0jvvzn9s8k51d8a.png>)
 
 ## Quickstart (local)
 Prereqs:

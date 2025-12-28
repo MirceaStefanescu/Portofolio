@@ -4,8 +4,13 @@ Automated CI/CD pipeline template for regulated teams that need SBOMs, signed ar
 
 ## Demo
 - Live: TBD
-- Video or GIF: `demo/pipeline-architecture.svg`
-- Screenshots: `demo/pipeline-artifacts.svg`
+- Video or GIF: TBD
+- Screenshots:
+  - `demo/pipeline-architecture.svg`
+  - `demo/pipeline-artifacts.svg`
+
+![Pipeline architecture](<demo/pipeline-architecture.svg>)
+![Pipeline artifacts](<demo/pipeline-artifacts.svg>)
 
 ## Why this exists
 Supply chain risk and compliance requirements make it hard to ship quickly without compromising auditability. This project standardizes SBOM generation, dependency and container scanning, artifact signing, and policy gates so teams can produce repeatable, verifiable releases across multi-cloud environments.

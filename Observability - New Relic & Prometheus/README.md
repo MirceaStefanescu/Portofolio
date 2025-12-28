@@ -24,7 +24,16 @@ This project standardizes instrumentation with OpenTelemetry, ingests metrics an
 ## Demo
 - Live: TBD
 - Video or GIF: TBD
-- Screenshots: add to `docs/screenshots/`
+- Screenshots:
+  - `docs/screenshots/20251228_1746_Unified Cloud Observability_simple_compose_01kdjt55ncegvv90qnwvzbev87.png`
+  - `docs/screenshots/20251228_1746_Unified Cloud Observability_simple_compose_01kdjt55nde0kbfkfd985v68jc.png`
+  - `docs/screenshots/20251228_1746_Unified Cloud Observability_simple_compose_01kdjt55nee6b8yna3zqzdqnxa.png`
+  - `docs/screenshots/20251228_1746_Unified Cloud Observability_simple_compose_01kdjt55nffz8vwv00ghbnyvse.png`
+
+![Unified Observability 01](<docs/screenshots/20251228_1746_Unified Cloud Observability_simple_compose_01kdjt55ncegvv90qnwvzbev87.png>)
+![Unified Observability 02](<docs/screenshots/20251228_1746_Unified Cloud Observability_simple_compose_01kdjt55nde0kbfkfd985v68jc.png>)
+![Unified Observability 03](<docs/screenshots/20251228_1746_Unified Cloud Observability_simple_compose_01kdjt55nee6b8yna3zqzdqnxa.png>)
+![Unified Observability 04](<docs/screenshots/20251228_1746_Unified Cloud Observability_simple_compose_01kdjt55nffz8vwv00ghbnyvse.png>)
 
 ## Quickstart (local)
 Prereqs:

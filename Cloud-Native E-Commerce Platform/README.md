@@ -23,7 +23,16 @@ This project demonstrates a production-minded microservices baseline with REST A
 ## Demo
 - Live: TBD
 - Video or GIF: TBD
-- Screenshots: `docs/screenshots/`
+- Screenshots:
+  - `docs/screenshots/20251228_1734_Cloud-Native E-commerce Architecture_simple_compose_01kdjsf76werharaf9884tex8p.png`
+  - `docs/screenshots/20251228_1734_Cloud-Native E-commerce Architecture_simple_compose_01kdjsf76xe659xjahv3y1accm.png`
+  - `docs/screenshots/20251228_1734_Cloud-Native E-commerce Architecture_simple_compose_01kdjsf76yfdg994q313qzs4gg.png`
+  - `docs/screenshots/20251228_1734_Cloud-Native E-commerce Architecture_simple_compose_01kdjsf76zfn18b0ygm0jsjr3y.png`
+
+![Cloud-Native E-commerce 01](<docs/screenshots/20251228_1734_Cloud-Native E-commerce Architecture_simple_compose_01kdjsf76werharaf9884tex8p.png>)
+![Cloud-Native E-commerce 02](<docs/screenshots/20251228_1734_Cloud-Native E-commerce Architecture_simple_compose_01kdjsf76xe659xjahv3y1accm.png>)
+![Cloud-Native E-commerce 03](<docs/screenshots/20251228_1734_Cloud-Native E-commerce Architecture_simple_compose_01kdjsf76yfdg994q313qzs4gg.png>)
+![Cloud-Native E-commerce 04](<docs/screenshots/20251228_1734_Cloud-Native E-commerce Architecture_simple_compose_01kdjsf76zfn18b0ygm0jsjr3y.png>)
 
 ## Quickstart (local)
 Prereqs:

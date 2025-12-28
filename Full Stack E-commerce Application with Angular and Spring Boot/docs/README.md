@@ -26,4 +26,13 @@ include:
 
 ## Screenshots
 
-Add UI screenshots under `docs/screenshots/`.
+UI screenshots:
+- `docs/screenshots/20251228_1739_E-commerce App Showcase_simple_compose_01kdjss6bzee4tyb7jj380myyp.png`
+- `docs/screenshots/20251228_1739_E-commerce App Showcase_simple_compose_01kdjss6c0fjjv7jkk2n500ejv.png`
+- `docs/screenshots/20251228_1739_E-commerce App Showcase_simple_compose_01kdjss6c1ejjs4dbh4xrf43ar.png`
+- `docs/screenshots/20251228_1739_E-commerce App Showcase_simple_compose_01kdjss6c2f78b0a76nd46n7dp.png`
+
+![E-commerce UI 01](<docs/screenshots/20251228_1739_E-commerce App Showcase_simple_compose_01kdjss6bzee4tyb7jj380myyp.png>)
+![E-commerce UI 02](<docs/screenshots/20251228_1739_E-commerce App Showcase_simple_compose_01kdjss6c0fjjv7jkk2n500ejv.png>)
+![E-commerce UI 03](<docs/screenshots/20251228_1739_E-commerce App Showcase_simple_compose_01kdjss6c1ejjs4dbh4xrf43ar.png>)
+![E-commerce UI 04](<docs/screenshots/20251228_1739_E-commerce App Showcase_simple_compose_01kdjss6c2f78b0a76nd46n7dp.png>)
