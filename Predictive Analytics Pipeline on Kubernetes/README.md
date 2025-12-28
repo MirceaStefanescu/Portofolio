@@ -1,6 +1,9 @@
 # Predictive Analytics Pipeline on Kubernetes
 
-Event-driven predictive analytics pipeline for data and platform teams that need real-time insights and autoscaling on Kubernetes.
+Real-time predictive analytics pipeline for data and platform teams that need fast insights from streaming IoT telemetry.
+15-second pitch: A real-time pipeline that ingests Kafka streams, processes them with Flink for streaming ETL and prediction scoring, writes results to PostgreSQL/Elasticsearch, and visualizes metrics in Grafana. Deployed on Kubernetes to demonstrate end-to-end data engineering and MLOps.
+
+Use case: An IoT sensor network emits temperature events; Flink aggregates and scores anomalies per 30-second window; ops teams monitor results in Grafana.
 
 ## Features
 - Kafka ingestion for durable event streams and backpressure handling
@@ -22,8 +25,10 @@ Event-driven predictive analytics pipeline for data and platform teams that need
 ## Demo
 - Live: TBD
 - Video or GIF: `demo/pipeline-demo.gif`
-- Screenshot: `demo/grafana-dashboard.png`
-- Screenshot: `demo/flink-ui.png`
+- Screenshots: `demo/grafana-dashboard.png`, `demo/flink-ui.png`
+
+![Grafana dashboard](demo/grafana-dashboard.png)
+![Flink UI](demo/flink-ui.png)
 
 ## Quickstart (local)
 Prereqs:
@@ -32,27 +37,30 @@ Prereqs:
 
 Run:
 ```
+make dev
+```
+
+Or:
+```
 docker compose up --build
 ```
 
-Generate events:
+Generate sample events (IoT-style sensor readings):
 ```
-curl -X POST http://localhost:8082/api/events \
-  -H "Content-Type: application/json" \
-  -d '{"eventType":"purchase","value":42.5,"timestamp":"2024-05-01T12:00:00Z"}'
+./demo/send-events.sh
 ```
 
-Query predictions:
+Verify output:
 ```
-curl "http://localhost:8082/api/predictions?eventType=purchase&limit=10"
+curl "http://localhost:8082/api/predictions?limit=5"
 ```
 
 Search predictions in Elasticsearch:
 ```
-curl "http://localhost:8082/api/predictions/search?q=purchase&limit=5"
+curl "http://localhost:8082/api/predictions/search?q=sensor&limit=5"
 ```
 
-Open dashboards:
+Open dashboards (first results appear after the first 30-second window):
 - Flink UI: http://localhost:8081
 - Grafana: http://localhost:3001 (admin / admin)
 
@@ -61,6 +69,10 @@ Local ports:
 - Kafka: localhost:9094
 - PostgreSQL: localhost:5433
 - Elasticsearch: http://localhost:9200
+
+Configuration:
+- Environment variables are used for brokers, topics, and data stores (see `.env.example`).
+- Docker Compose wires defaults for local development.
 
 ## Architecture
 ```mermaid
@@ -80,7 +92,60 @@ flowchart LR
   Metrics --> Grafana[Grafana]
 ```
 
-Events are published to Kafka, Flink computes tumbling-window aggregations and prediction scores, and results are written to PostgreSQL and Elasticsearch. The Spring Boot API exposes predictions and provides a simple event ingestion endpoint. Grafana dashboards query PostgreSQL for visibility. KEDA scales consumers based on Kafka lag in a Kubernetes deployment.
+Events are published to Kafka, Flink computes tumbling-window aggregations and prediction scores, and results are written to PostgreSQL and Elasticsearch. The Spring Boot API exposes predictions and provides a simple event ingestion endpoint. Grafana dashboards visualize PostgreSQL data, while Elasticsearch enables fast ad-hoc queries.
+
+### Project structure
+- `api/`: Spring Boot ingestion and query API
+- `flink/`: Flink streaming job (ETL + scoring)
+- `infra/`: database init and schema
+- `k8s/`: Kubernetes manifests and KEDA scaling
+- `grafana/`: provisioning + dashboards
+- `demo/`: screenshots and demo assets
+- `docs/`: OpenAPI spec and usage notes
+- `docker-compose.yml`: local stack
+
+### Data schema
+PostgreSQL schema is defined in `infra/postgres/init.sql`:
+```sql
+CREATE TABLE predictions (
+  id SERIAL PRIMARY KEY,
+  event_type TEXT NOT NULL,
+  window_start TIMESTAMP NOT NULL,
+  window_end TIMESTAMP NOT NULL,
+  event_count BIGINT NOT NULL,
+  avg_value DOUBLE PRECISION NOT NULL,
+  prediction_score DOUBLE PRECISION NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
+Elasticsearch index `predictions` stores JSON documents with `event_type`, `window_start`, `window_end`, `event_count`, `avg_value`, `prediction_score`, and `generated_at`.
+
+### Processing notes
+- Invalid JSON or missing `eventType` is logged and dropped to keep the stream running.
+- Prediction scoring uses a lightweight heuristic (placeholder for a real ML model).
+
+## Tests
+```
+make test
+```
+
+Or:
+```
+mvn -f api/pom.xml test
+mvn -f flink/pom.xml test
+```
+
+## Security
+Secrets: use `.env` (see `.env.example`). Demo credentials are for local use only. The demo API is unauthenticated; add JWT/OAuth and network policies for production. Use RBAC and namespace isolation for Kubernetes, and restrict Kafka/PostgreSQL/Elasticsearch access to internal services. Data used in demos is synthetic.
+
+## Roadmap / tradeoffs
+- Add a lightweight ML model for anomaly detection and document its training inputs.
+- Add schema registry and data-quality checks for event validation.
+- Add integration tests using Testcontainers (Kafka/PostgreSQL).
+- Add an end-to-end demo script for Kind-based Kubernetes runs.
+- Add OpenTelemetry traces and publish a small throughput benchmark.
+- Tradeoff: dual storage (PostgreSQL + Elasticsearch) improves query flexibility at the cost of higher operational overhead.
 
 ## API
 - OpenAPI: `docs/openapi.yaml`
@@ -88,23 +153,6 @@ Events are published to Kafka, Flink computes tumbling-window aggregations and p
 
 ## Kubernetes
 - Deployment guide: `k8s/README.md`
-
-## Tests
-```
-cd api
-mvn test
-
-cd ../flink
-mvn test
-```
-
-## Security
-Secrets: use `.env` (see `.env.example`). The demo API is unauthenticated; add JWT/OAuth and network policies for production. Use RBAC and namespace isolation for Kubernetes, and restrict Kafka/PostgreSQL/Elasticsearch access to internal services.
-
-## Roadmap / tradeoffs
-- Add model retraining workflows and feature store integration.
-- Add schema registry and data-quality checks for event validation.
-- Tradeoff: dual storage (PostgreSQL + Elasticsearch) improves query flexibility at the cost of higher operational overhead.
 
 ## Skills and Deliverables
 - Apache Kafka

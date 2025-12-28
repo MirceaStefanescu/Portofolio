@@ -113,12 +113,20 @@ services:
       - "3001:3000"
     depends_on:
       - postgres
+      - grafana-renderer
     environment:
       GF_SECURITY_ADMIN_USER: admin
       GF_SECURITY_ADMIN_PASSWORD: admin
+      GF_RENDERING_SERVER_URL: http://grafana-renderer:8081/render
+      GF_RENDERING_CALLBACK_URL: http://grafana:3000/
     volumes:
       - ./grafana/provisioning:/etc/grafana/provisioning
       - ./grafana/dashboards:/var/lib/grafana/dashboards
+
+  grafana-renderer:
+    image: grafana/grafana-image-renderer:3.10.1
+    environment:
+      ENABLE_METRICS: "true"
 
 volumes:
   postgres_data:
