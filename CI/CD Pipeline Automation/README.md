@@ -7,7 +7,7 @@ production environments.
 ## Demo
 - Live: TBD
 - Video or GIF: TBD
-- Screenshots: TBD
+- Screenshots: `screenshots/` (add PNG/GIFs here)
 - Local: http://localhost:8080 (after `make dev`)
 
 ## Why this exists
@@ -138,6 +138,7 @@ mitigate with RBAC, least-privilege IAM, and network policies in production.
 ## Project structure
 - `src/`: Express API and metrics endpoints.
 - `public/`: Static UI for build/deploy metadata.
+- `screenshots/`: Demo images for the README.
 - `tests/`: Unit, integration, and end-to-end tests.
 - `monitoring/`: Prometheus config and Grafana dashboard provisioning.
 - `k8s/`: Blue-green and rolling Kubernetes manifests.
