@@ -7,7 +7,11 @@ production environments.
 ## Demo
 - Live: TBD
 - Video or GIF: TBD
-- Screenshots: `screenshots/` (add PNG/GIFs here)
+- Screenshots:
+  ![CI/CD pipeline screenshot 1](<screenshots/20251229_1525_Automated DevOps Pipeline_simple_compose_01kdn4ftrvfwpsykbq83v1rfed.png>)
+  ![CI/CD pipeline screenshot 2](<screenshots/20251229_1525_Automated DevOps Pipeline_simple_compose_01kdn4ftrwf6dsn5mk7yq4jbkd.png>)
+  ![CI/CD pipeline screenshot 3](<screenshots/20251229_1525_Automated DevOps Pipeline_simple_compose_01kdn4ftrxfrgs3k85y6v52rth.png>)
+  ![CI/CD pipeline screenshot 4](<screenshots/20251229_1525_Automated DevOps Pipeline_simple_compose_01kdn4ftsffd0syfyq7ww7dwq5.png>)
 - Local: http://localhost:8080 (after `make dev`)
 
 ## Why this exists
