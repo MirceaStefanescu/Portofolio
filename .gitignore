@@ -1,8 +1,0 @@
-.idea/
-AGENT.md
-AGENTS.md
-.env
-/Real-Time Chat & Collaboration Platform/frontend/node_modules/
-/Secure RAG Service & Knowledge API/api/target/
-/Predictive Analytics Pipeline on Kubernetes/api/target/
-/Predictive Analytics Pipeline on Kubernetes/flink/target/
