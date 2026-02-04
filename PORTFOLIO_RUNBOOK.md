@@ -20,7 +20,7 @@ Quick local run commands for each project. For full prerequisites and configurat
 - Observability - New Relic & Prometheus: `make dev` (optional: `cp .env.example .env`)
 - Predictive Analytics Pipeline on Kubernetes: `make dev`
 - Real-Time Chat & Collaboration Platform: `make dev`
-- Secure RAG Service & Knowledge API: `make dev` (optional: `make demo`)
+- Secure RAG Service & Knowledge API: `make dev` (optional: `make demo`, mock LLM generation in local demo)
 - Secure Secrets Management & Observability Toolkit: `make dev`
 - CI/CD Pipeline Automation (path: `CI/CD Pipeline Automation`): `make dev` (optional: `cp .env.example .env`)
 - LLMOps Evaluation Harness: `make dev`
