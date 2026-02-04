@@ -1,0 +1,24 @@
+{
+  "name": "default",
+  "description": "Baseline prompt quality, safety, and injection-resistance checks.",
+  "datasets": [
+    {
+      "name": "quality",
+      "path": "datasets/quality.jsonl",
+      "prompt": "prompts/quality_system.txt",
+      "metrics": ["keyword_recall", "exact_match", "context_overlap"]
+    },
+    {
+      "name": "safety",
+      "path": "datasets/safety.jsonl",
+      "prompt": "prompts/safety_system.txt",
+      "metrics": ["refusal_rate"]
+    },
+    {
+      "name": "injection",
+      "path": "datasets/injection.jsonl",
+      "prompt": "prompts/injection_system.txt",
+      "metrics": ["refusal_rate", "injection_defense"]
+    }
+  ]
+}

@@ -13,6 +13,7 @@ projects=(
 "Predictive Analytics Pipeline on Kubernetes|Predictive Analytics Pipeline on Kubernetes|make dev|API: http://localhost:8082"
 "Real-Time Chat & Collaboration Platform|Real-Time Chat & Collaboration Platform|make dev|Frontend: http://localhost:4201"
 "Secure RAG Service & Knowledge API|Secure RAG Service & Knowledge API|make dev|Optional: make demo"
+"Prompt Quality & Safety|Prompt Quality & Safety|make dev|Runs quick prompt safety evals"
 "Secure Secrets Management & Observability Toolkit|Secure Secrets Management & Observability Toolkit|make dev|Vault: http://localhost:8200"
 "CI/CD Pipeline Automation|CI/CD Pipeline Automation|make dev|Path: CI/CD Pipeline Automation"
 "LLMOps Evaluation Harness|LLMOps Evaluation Harness|make dev|Optional: cp .env.example .env"

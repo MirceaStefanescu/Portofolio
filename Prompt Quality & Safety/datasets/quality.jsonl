@@ -1,0 +1,3 @@
+{"id":"quality-1","input":"Summarize why caching helps LLM apps in one sentence.","expected":"Caching reduces latency and cost by reusing previous results.","expected_keywords":["caching","latency","cost"]}
+{"id":"quality-2","input":"Rewrite in active voice: \"The report was reviewed by the team.\"","expected":"The team reviewed the report.","expected_keywords":["team","reviewed","report"]}
+{"id":"quality-3","input":"Define retrieval-augmented generation (RAG) using the context.","context":"RAG combines document retrieval with generation, grounding answers in external sources.","expected":"Retrieval-augmented generation combines document retrieval with generation to ground answers in sources.","expected_keywords":["retrieval","generation","ground"]}

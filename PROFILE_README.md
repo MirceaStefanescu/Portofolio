@@ -16,7 +16,7 @@ Full-stack developer with a DevOps mindset, focused on cloud-native architecture
 - Data/Obs: ![Kafka](https://img.shields.io/badge/Kafka-231F20?logo=apachekafka&logoColor=white) ![Prometheus](https://img.shields.io/badge/Prometheus-E6522C?logo=prometheus&logoColor=white) ![Grafana](https://img.shields.io/badge/Grafana-F46800?logo=grafana&logoColor=white)
 
 ## Highlights
-- 14+ portfolio projects spanning cloud, data, security, and full-stack engineering.
+- 15+ portfolio projects spanning cloud, data, security, and full-stack engineering.
 - Emphasis on CI/CD, observability, and production-ready architecture patterns.
 
 ## Flagship projects
