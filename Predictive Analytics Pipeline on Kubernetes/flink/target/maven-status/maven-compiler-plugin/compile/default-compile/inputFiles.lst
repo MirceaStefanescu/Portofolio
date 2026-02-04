@@ -1,8 +1,0 @@
-/workspace/src/main/java/com/portfolio/pipeline/flink/EventParser.java
-/workspace/src/main/java/com/portfolio/pipeline/flink/EventAggregate.java
-/workspace/src/main/java/com/portfolio/pipeline/flink/PredictionWindowFunction.java
-/workspace/src/main/java/com/portfolio/pipeline/flink/Event.java
-/workspace/src/main/java/com/portfolio/pipeline/flink/PredictionScorer.java
-/workspace/src/main/java/com/portfolio/pipeline/flink/PredictionJob.java
-/workspace/src/main/java/com/portfolio/pipeline/flink/Prediction.java
-/workspace/src/main/java/com/portfolio/pipeline/flink/EventAccumulator.java

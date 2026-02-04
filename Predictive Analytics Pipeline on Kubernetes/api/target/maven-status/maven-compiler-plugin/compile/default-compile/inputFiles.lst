@@ -1,8 +1,0 @@
-/workspace/src/main/java/com/portfolio/pipeline/api/model/PredictionResponse.java
-/workspace/src/main/java/com/portfolio/pipeline/api/PredictiveAnalyticsApplication.java
-/workspace/src/main/java/com/portfolio/pipeline/api/service/EventProducer.java
-/workspace/src/main/java/com/portfolio/pipeline/api/service/PredictionQueryService.java
-/workspace/src/main/java/com/portfolio/pipeline/api/controller/AnalyticsController.java
-/workspace/src/main/java/com/portfolio/pipeline/api/service/PredictionSearchService.java
-/workspace/src/main/java/com/portfolio/pipeline/api/config/ElasticsearchConfig.java
-/workspace/src/main/java/com/portfolio/pipeline/api/model/EventRequest.java
