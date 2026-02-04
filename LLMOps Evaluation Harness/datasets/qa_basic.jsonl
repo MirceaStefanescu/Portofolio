@@ -1,0 +1,3 @@
+{"id":"basic-1","input":"What is 2 + 2?","expected":"4"}
+{"id":"basic-2","input":"What color is the sky on a clear day?","expected":"blue"}
+{"id":"basic-3","input":"Name the largest planet in our solar system.","expected":"Jupiter"}

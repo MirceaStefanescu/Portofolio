@@ -1,0 +1,19 @@
+{{- if .Values.grafanaDashboards.enabled }}
+{{- $labelKey := .Values.grafanaDashboards.labelKey }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "reliability-pack.fullname" . }}-dashboards
+  labels:
+    {{- include "reliability-pack.labels" . | nindent 4 }}
+    {{ $labelKey }}: "1"
+  {{- if .Values.grafanaDashboards.folder }}
+  annotations:
+    grafana_folder: "{{ .Values.grafanaDashboards.folder }}"
+  {{- end }}
+data:
+{{- range $path, $bytes := .Files.Glob "dashboards/*.json" }}
+  {{ base $path }}: |-
+{{ $bytes | toString | nindent 4 }}
+{{- end }}
+{{- end }}

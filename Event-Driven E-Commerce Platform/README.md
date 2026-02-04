@@ -132,7 +132,7 @@ Secrets: use `.env` (see `.env.example`). Prefer IAM roles for service-to-servic
 - Centralized metrics on Prometheus/Grafana to surface SLIs and business KPIs.
 
 ### Mirroring to GitHub
-- Keep local-only files in `.gitignore` (`AGENTS.md`, `.env`, etc).
+- Keep local-only files in local Git excludes (e.g., `.git/info/exclude` or a global gitignore).
 - Commit in logical chunks with clear messages.
 - Push after README/CI/quickstart remain accurate.
 - Keep Actions, Dependabot, and secret scanning enabled.

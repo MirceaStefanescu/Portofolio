@@ -1,0 +1,3 @@
+com/portfolio/pipeline/flink/EventAggregateTest.class
+com/portfolio/pipeline/flink/PredictionScorerTest.class
+com/portfolio/pipeline/flink/EventParserTest.class

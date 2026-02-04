@@ -10,6 +10,7 @@ This project standardizes instrumentation with OpenTelemetry, ingests metrics an
 - New Relic export for unified dashboards and alert policies across clouds
 - Backup-ready monitoring data with Velero workflows
 - SLO-oriented alerting for latency, errors, and saturation signals
+- Reliability pack assets: Helm chart, dashboards, alert rules, and on-call runbooks
 - Built-in telemetry generator for local validation of the pipeline
 
 ## Tech stack (and why)
@@ -35,6 +36,12 @@ This project standardizes instrumentation with OpenTelemetry, ingests metrics an
 ![Unified Observability 03](<docs/screenshots/20251228_1746_Unified Cloud Observability_simple_compose_01kdjt55nee6b8yna3zqzdqnxa.png>)
 ![Unified Observability 04](<docs/screenshots/20251228_1746_Unified Cloud Observability_simple_compose_01kdjt55nffz8vwv00ghbnyvse.png>)
 
+## Reliability Pack
+- Helm chart: `helm/reliability-pack` (ConfigMap dashboards + PrometheusRule alerts).
+- Dashboards: `grafana/dashboards/reliability-overview.json`
+- Alert rules: `prometheus/alert.rules.yml`
+- Runbooks: `runbooks/`
+
 ## Quickstart (local)
 Prereqs:
 - Docker and Docker Compose
@@ -50,10 +57,13 @@ make dev
 Demo telemetry:
 - `telemetrygen` containers emit traces and metrics for `demo-service`.
 - In Prometheus, validate the scrape with `up{job="otel-collector"}` and explore metrics labeled with `demo-service`.
+- `log-generator` emits sample logs, and Promtail ships them to Loki for the logs panel.
 
 Access:
 - Prometheus: http://localhost:9090
 - Grafana: http://localhost:3000 (admin / admin)
+- Alertmanager: http://localhost:9093
+- Loki: http://localhost:3100
 
 Send OTLP telemetry to:
 - gRPC: `localhost:4317`
@@ -62,6 +72,24 @@ Send OTLP telemetry to:
 New Relic (optional):
 - Set `NEW_RELIC_LICENSE_KEY` in `.env`.
 - Run `make newrelic` or set `OTEL_COLLECTOR_CONFIG=config-newrelic.yaml` before `make dev`.
+
+## Dashboards
+- Reliability Overview: CPU, memory, request rate, p95 latency, error rate, and recent logs.
+- PromQL assumes Micrometer-style metrics (`http_server_requests_seconds_*`) and kube-state metrics; adjust labels/queries for your stack.
+
+## Alerting
+- Prometheus rules: `prometheus/alert.rules.yml` (service down, error rate, latency, saturation, telemetry, log ingestion).
+- Alertmanager config: `alertmanager/alertmanager.yml` (default receiver is a no-op; wire Slack/PagerDuty for paging).
+
+## Helm chart
+```
+helm upgrade --install reliability-pack ./helm/reliability-pack
+```
+Notes:
+- Requires `PrometheusRule` CRDs (kube-prometheus-stack) and a Grafana sidecar that loads ConfigMap dashboards.
+
+## Runbooks
+On-call guides live in `runbooks/` and map to each alert rule.
 
 ## Architecture
 ```mermaid
@@ -92,16 +120,16 @@ Secrets: use `.env` (see `.env.example`). Store New Relic license keys in Kubern
 
 ## Roadmap / tradeoffs
 - Add multi-cluster federation (Thanos/Mimir) for long-term retention.
-- Add synthetic checks and alert runbooks with escalation policies.
+- Add paging integrations (Slack/PagerDuty) and synthetic checks.
 - Tradeoff: richer telemetry improves visibility but increases storage and egress costs.
 
 ## Notes / limitations
 - The local Docker Compose stack is a single-node demo; HA and multi-cloud topology are implemented via Kubernetes/Helm.
 
 ## Tags
-monitoring, tracing, kubernetes, grafana, prometheus, observability, new relic, opentelemetry
+monitoring, tracing, kubernetes, grafana, prometheus, alertmanager, loki, observability, new relic, opentelemetry
 
 ## Skills and tools
-Tools and software: docker, kubernetes, grafana, helm, prometheus, new relic, velero, opentelemetry.
+Tools and software: docker, kubernetes, grafana, helm, prometheus, alertmanager, loki, new relic, velero, opentelemetry.
 
 Skills: kubernetes, devops, ci/cd.

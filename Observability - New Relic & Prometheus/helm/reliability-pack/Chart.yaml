@@ -1,0 +1,6 @@
+apiVersion: v2
+name: reliability-pack
+description: Helm chart packaging reliability dashboards and alert rules for Kubernetes services.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

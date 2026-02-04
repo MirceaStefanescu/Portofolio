@@ -1,0 +1,45 @@
+name: llmops-eval-harness-ci
+
+on:
+  push:
+    paths:
+      - "LLMOps Evaluation Harness/**"
+      - ".github/workflows/llmops-eval-harness-ci.yml"
+  pull_request:
+    paths:
+      - "LLMOps Evaluation Harness/**"
+      - ".github/workflows/llmops-eval-harness-ci.yml"
+
+jobs:
+  eval-harness:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: LLMOps Evaluation Harness
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+          cache-dependency-path: |
+            LLMOps Evaluation Harness/requirements-dev.txt
+            LLMOps Evaluation Harness/requirements.txt
+
+      - name: Install dependencies
+        run: python -m pip install --upgrade pip && pip install -r requirements-dev.txt
+
+      - name: Lint
+        run: ruff check .
+
+      - name: Format check
+        run: ruff format --check .
+
+      - name: Tests
+        run: pytest -q
+
+      - name: Build
+        run: python -m build

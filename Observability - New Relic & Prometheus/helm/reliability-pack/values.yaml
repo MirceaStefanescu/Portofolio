@@ -1,0 +1,83 @@
+nameOverride: ""
+fullnameOverride: ""
+
+grafanaDashboards:
+  enabled: true
+  labelKey: grafana_dashboard
+  folder: "Reliability Pack"
+
+prometheusRule:
+  enabled: true
+  groups:
+    - name: reliability-pack
+      rules:
+        - alert: ServiceDown
+          expr: up{job!~"prometheus"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Service is down"
+            description: "Target {{ $labels.job }} has been unreachable for more than 2 minutes."
+            runbook_url: "runbooks/service-down.md"
+        - alert: HighErrorRate
+          expr: |
+            100 * (sum(rate(http_server_requests_seconds_count{status=~"5.."}[5m])) /
+            sum(rate(http_server_requests_seconds_count[5m]))) > 2
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High 5xx error rate"
+            description: "Error rate > 2% over 10 minutes."
+            runbook_url: "runbooks/high-error-rate.md"
+        - alert: HighLatencyP95
+          expr: |
+            1000 * histogram_quantile(0.95, sum(rate(http_server_requests_seconds_bucket[5m])) by (le)) > 500
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High request latency (p95)"
+            description: "p95 latency > 500ms for 10 minutes."
+            runbook_url: "runbooks/high-latency.md"
+        - alert: HighCPUUsage
+          expr: |
+            sum(rate(container_cpu_usage_seconds_total{container!="", image!=""}[5m])) by (namespace, pod) > 0.8
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High CPU usage"
+            description: "Pod CPU usage > 0.8 cores for 10 minutes."
+            runbook_url: "runbooks/high-cpu-memory.md"
+        - alert: HighMemoryUsage
+          expr: |
+            (sum(container_memory_working_set_bytes{container!="", image!=""}) by (namespace, pod) /
+            sum(container_spec_memory_limit_bytes{container!="", image!=""}) by (namespace, pod)) > 0.8
+          for: 10m
+          labels:
+            severity: warning
+          annotations:
+            summary: "High memory usage"
+            description: "Pod memory usage > 80% of limit for 10 minutes."
+            runbook_url: "runbooks/high-cpu-memory.md"
+        - alert: TelemetryPipelineDown
+          expr: up{job="otel-collector"} == 0
+          for: 2m
+          labels:
+            severity: critical
+          annotations:
+            summary: "Telemetry pipeline down"
+            description: "OpenTelemetry Collector is not reachable."
+            runbook_url: "runbooks/telemetry-pipeline-down.md"
+        - alert: LogIngestionStalled
+          expr: |
+            rate(loki_ingester_bytes_total[5m]) == 0
+          for: 15m
+          labels:
+            severity: warning
+          annotations:
+            summary: "Log ingestion stalled"
+            description: "No log bytes ingested into Loki in the last 15 minutes."
+            runbook_url: "runbooks/log-ingestion.md"

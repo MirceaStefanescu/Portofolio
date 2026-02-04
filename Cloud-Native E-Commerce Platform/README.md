@@ -145,7 +145,7 @@ Secrets: use `.env` (see `.env.example`). No secrets are committed. For producti
 - Chose FastAPI to keep implementation compact while remaining production-friendly.
 
 ### Mirroring to GitHub
-- Keep local-only files in `.gitignore` (`AGENTS.md`, `.env`, etc).
+- Keep local-only files in local Git excludes (e.g., `.git/info/exclude` or a global gitignore).
 - Commit in logical chunks with clear messages.
 - Push after README/CI/quickstart remain accurate.
 - Keep Actions, Dependabot, and secret scanning enabled.

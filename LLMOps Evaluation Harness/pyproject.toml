@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "llmops-eval-harness"
+version = "0.1.0"
+description = "LLMOps evaluation harness with JSONL tasks, metrics, and CI integration."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["requests>=2.32.0"]
+
+[project.scripts]
+eval-harness = "eval_harness.cli:main"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100

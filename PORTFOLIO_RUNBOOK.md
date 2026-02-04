@@ -23,3 +23,4 @@ Quick local run commands for each project. For full prerequisites and configurat
 - Secure RAG Service & Knowledge API: `make dev` (optional: `make demo`)
 - Secure Secrets Management & Observability Toolkit: `make dev`
 - CI/CD Pipeline Automation (path: `CI/CD Pipeline Automation`): `make dev` (optional: `cp .env.example .env`)
+- LLMOps Evaluation Harness: `make dev`

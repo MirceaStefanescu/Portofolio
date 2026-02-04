@@ -1,0 +1,3 @@
+{"id":"ctx-1","input":"What is the capital of France?","expected":"Paris","context":"France's capital city is Paris. It is known for the Eiffel Tower."}
+{"id":"ctx-2","input":"Which database stores vectors in this system?","expected":"Qdrant","context":"The architecture uses Qdrant as the vector store and PostgreSQL for metadata."}
+{"id":"ctx-3","input":"What HTTP status code represents success?","expected":"200","context":"Standard HTTP success responses return status code 200 (OK)."}

@@ -15,6 +15,7 @@ projects=(
 "Secure RAG Service & Knowledge API|Secure RAG Service & Knowledge API|make dev|Optional: make demo"
 "Secure Secrets Management & Observability Toolkit|Secure Secrets Management & Observability Toolkit|make dev|Vault: http://localhost:8200"
 "CI/CD Pipeline Automation|CI/CD Pipeline Automation|make dev|Path: CI/CD Pipeline Automation"
+"LLMOps Evaluation Harness|LLMOps Evaluation Harness|make dev|Optional: cp .env.example .env"
 )
 
 names=()
