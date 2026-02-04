@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import asdict
 import json
+from dataclasses import asdict
 from pathlib import Path
 from typing import Any
 
@@ -120,9 +120,7 @@ def summarize(
     summary_metrics: dict[str, float] = {}
     for metric in metrics:
         values = [
-            case["metrics"].get(metric)
-            for case in cases
-            if case["metrics"].get(metric) is not None
+            case["metrics"].get(metric) for case in cases if case["metrics"].get(metric) is not None
         ]
         if values:
             summary_metrics[metric] = sum(values) / len(values)

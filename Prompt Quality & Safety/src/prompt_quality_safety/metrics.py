@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import re
-from typing import Callable, Iterable
+from collections.abc import Callable
 
 from prompt_quality_safety.datasets import EvalCase
 from prompt_quality_safety.guardrails import is_refusal

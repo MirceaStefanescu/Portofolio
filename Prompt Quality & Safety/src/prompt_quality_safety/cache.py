@@ -1,6 +1,5 @@
-from dataclasses import dataclass, field
 import hashlib
-from typing import Dict
+from dataclasses import dataclass, field
 
 
 def cache_key(text: str) -> str:
@@ -9,7 +8,7 @@ def cache_key(text: str) -> str:
 
 @dataclass
 class InMemoryCache:
-    store: Dict[str, str] = field(default_factory=dict)
+    store: dict[str, str] = field(default_factory=dict)
 
     def get(self, key: str) -> str | None:
         return self.store.get(key)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
 import json
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -19,7 +19,7 @@ class EvalCase:
     source: str | None = None
 
     @classmethod
-    def from_dict(cls, data: dict[str, Any]) -> "EvalCase":
+    def from_dict(cls, data: dict[str, Any]) -> EvalCase:
         return cls(
             id=data.get("id", ""),
             input=data.get("input", ""),

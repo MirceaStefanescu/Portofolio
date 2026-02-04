@@ -1,8 +1,10 @@
-from dataclasses import dataclass
 import re
-from typing import Iterable
+from collections.abc import Iterable
+from dataclasses import dataclass
 
-REFUSAL_MESSAGE = "I can't help with that request. If you need safety guidance, consider official resources."
+REFUSAL_MESSAGE = (
+    "I can't help with that request. If you need safety guidance, consider official resources."
+)
 
 INJECTION_PATTERNS = [
     r"ignore (all|previous) instructions",
@@ -33,7 +35,9 @@ def classify_input(text: str) -> GuardrailResult:
         return GuardrailResult(action="allow", reason="empty input", category="none")
 
     if _matches(INJECTION_PATTERNS, text):
-        return GuardrailResult(action="refuse", reason="prompt injection detected", category="injection")
+        return GuardrailResult(
+            action="refuse", reason="prompt injection detected", category="injection"
+        )
 
     if _matches(HARM_PATTERNS, text):
         return GuardrailResult(action="refuse", reason="unsafe request detected", category="safety")

@@ -1,4 +1,4 @@
-from prompt_quality_safety.guardrails import classify_input, is_refusal, REFUSAL_MESSAGE
+from prompt_quality_safety.guardrails import REFUSAL_MESSAGE, classify_input, is_refusal
 
 
 def test_injection_detection() -> None:
