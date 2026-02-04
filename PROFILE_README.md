@@ -26,6 +26,7 @@ Full-stack developer with a DevOps mindset, focused on cloud-native architecture
 - Automated Infrastructure & Deployment Platform: Self-service infra provisioning with CI/CD templates and policy checks. https://github.com/<username>/automated-infrastructure-platform
 - Secure Secrets Management & Observability Toolkit: Vault, Prometheus/Grafana, and Terraform automation. https://github.com/<username>/secure-secrets-observability-toolkit
 - Observability - New Relic & Prometheus: Multi-cloud Kubernetes observability with OpenTelemetry and NR integration. https://github.com/<username>/observability-newrelic-prometheus
+- Prompt Quality & Safety: Prompt engineering toolkit with guardrails, injection tests, and eval metrics. https://github.com/<username>/prompt-quality-safety
 
 ## Currently working on
 - Polishing this portfolio for quick reviewer scan: READMEs, demos, and CI signals.
