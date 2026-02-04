@@ -72,6 +72,11 @@ flowchart LR
 
 Docs are ingested, chunked, embedded, and stored in a replicated vector store. The Spring Boot API performs retrieval and answer generation behind JWT and RBAC controls, while audit logs capture access events. Velero protects vector data backups, and New Relic provides telemetry for latency and reliability across multi-cloud Kubernetes clusters.
 
+## RAG benefits
+- Fresh and domain-specific answers without retraining: new docs can be ingested and queried immediately.
+- Source-aware responses: retrieved passages can be surfaced as citations to improve trust and debugging.
+- Cost-effective iteration: embeddings + retrieval scale better than frequent model retraining.
+
 ## Tests
 ```
 mvn -f api/pom.xml test
@@ -86,7 +91,7 @@ make test
 Secrets: use `.env` (see `.env.example`). JWT-based authentication and RBAC restrict access to endpoints; the dev token endpoint is gated by `X-Dev-Key` and should be disabled in production. Threat model basics in `docs/threat-model.md` cover prompt injection and data exfiltration risks. Use Kubernetes RBAC, network policies, and least-privilege service accounts for production.
 
 ## Notes / limitations
-- Local mode uses deterministic hash-based embeddings to stay self-contained; swap in LangChain4j-backed embeddings/LLMs for production quality.
+- Local mode uses deterministic hash-based embeddings and a lightweight mock LLM to stay self-contained; swap in LangChain4j-backed embeddings/LLMs for production quality.
 
 ## Roadmap / tradeoffs
 - Add eval sets, prompt-injection tests, and regression metrics for RAG quality.
